@@ -5,6 +5,6 @@ import { IGenre } from "../interfaces/genre.interface";
 export class GenreEntity implements IGenre{
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({length:50})
   name: string;
 }

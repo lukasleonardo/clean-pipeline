@@ -9,17 +9,17 @@ export class Book implements IBook{
   @PrimaryGeneratedColumn()
   id:number;
   
-  @Column()
+  @Column({length:50})
   name: string;
-  @Column()
+  @Column({length:3000})
   description: string;
   //Alguma coisa precisa ser feita aqui!!!!
-  @ManyToMany(type => GenreEntity)
+  @ManyToMany(() => GenreEntity, (GenreEntity)=> GenreEntity.id)
   @JoinTable()
   idGenre:GenreEntity[];
-  @Column()
+  @Column({length:50})
   author:string;
-  @Column()
+  @Column({length:50})
   state:string;
   @Column()
   value:Double;
