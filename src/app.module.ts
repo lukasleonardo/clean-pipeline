@@ -3,13 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GenreModule } from './genre/genre.module';
 import { BookModule } from './book/book.module';
-
 import { UserModule } from './user/user.module';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 
 @Module({
-  imports: [ GenreModule, BookModule, UserModule],
+  imports: [ConfigModule.forRoot({isGlobal:true}), GenreModule, BookModule, UserModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })

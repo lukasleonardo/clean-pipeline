@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, Double, ManyToOne, JoinTable} from "typeorm"
 import { IBook } from "../interfaces/book.interface";
-import { Genre } from "../../genre/entities/genre.entity";
+import { GenreEntity } from "../../genre/entities/genre.entity";
 import { User } from "../../user/entities/user.entity";
 
 
@@ -14,9 +14,9 @@ export class Book implements IBook{
   @Column()
   description: string;
   //Alguma coisa precisa ser feita aqui!!!!
-  @ManyToMany(type => Genre)
+  @ManyToMany(type => GenreEntity)
   @JoinTable()
-  idGenre:Genre[];
+  idGenre:GenreEntity[];
   @Column()
   author:string;
   @Column()
