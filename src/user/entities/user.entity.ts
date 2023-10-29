@@ -18,4 +18,6 @@ idFavoritos: []
 state: string
 @Column()
 Cpf:string
+@Column()
+isAdmin:boolean
 }

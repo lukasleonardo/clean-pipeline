@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGenreDto } from './dto/create-genre.dto';
-import { UpdateGenreDto } from './dto/update-genre.dto';
+import { IGenreService } from './interfaces/genreService.interface';
 
 @Injectable()
-export class GenreService {
+export class GenreService implements IGenreService {
   create(createGenreDto: CreateGenreDto) {
     return 'This action adds a new genre';
   }
@@ -13,6 +12,7 @@ export class GenreService {
   }
 
   findOne(id: number) {
+    // LOGICA DO CARALHO
     return `This action returns a #${id} genre`;
   }
 
