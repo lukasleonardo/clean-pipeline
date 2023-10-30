@@ -12,8 +12,6 @@ login: string
 senha: string
 @Column({length:50})
 province: string
-@Column()
-state: string
 @Column({length:20})
 Cpf:string
 

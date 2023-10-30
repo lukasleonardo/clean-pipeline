@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, Double, ManyToOne, JoinTable} from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, Double, ManyToOne, JoinTable, OneToOne, JoinColumn} from "typeorm"
 import { IBook } from "../interfaces/book.interface";
 import { GenreEntity } from "../../genre/entities/genre.entity";
 import { User } from "../../user/entities/user.entity";
@@ -24,7 +24,8 @@ export class Book implements IBook{
   @Column()
   value:Double;
   //Alguma coisa precisa ser feita aqui!!!!
-  @ManyToOne(type => User)
+  @OneToOne(type => User, book => Book)
+  user: User
   @JoinTable()
   idUser:User;
 

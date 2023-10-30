@@ -4,7 +4,6 @@ export interface IBaseUser {
   login: string
   senha: string
   province: string
-  state: string
   Cpf:string
   }
   
