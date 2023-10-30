@@ -1,8 +1,31 @@
+version: '3.8'
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: 100m
+    max-file: 100
+
+networks:
+  docker-network:
+    driver: bridge
+
 services:
-  db:
-    image: postgres
-    container_name: clean-pipeline
+  postgres_db:
+    image: bitnami/postgresql:latest
+    platform: linux/amd64
     ports:
-      - 6543:6543
-    env_file:
-      - .env
+      - ${POSTGRES_PORT}:5432
+    restart: always
+    volumes:
+      - db-data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+      - POSTGRESQL_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - docker-network
+    logging: *default-logging
+
+volumes:
+  db-data:
