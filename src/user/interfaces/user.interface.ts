@@ -1,11 +1,7 @@
-export interface IUser {
-Id:number
-nome:string
-login: string
-senha: string
-province: string
+import { IBaseUser } from "./baseUser.interface";
+
+export interface IUser extends IBaseUser {
+
 idFavoritos: []
-state: string
-Cpf:string
-isAdmin:boolean
+
 }

@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator"
 
-export class CreateUserDto{
+export class CreateBaseUserDto{
 
   @IsNotEmpty()
   readonly nome:string
@@ -14,5 +14,5 @@ export class CreateUserDto{
 
   readonly province: string
   readonly state: string
-  
+
 }
