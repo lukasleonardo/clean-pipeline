@@ -6,6 +6,5 @@ export interface IBaseUser {
   province: string
   state: string
   Cpf:string
-  isAdmin:boolean
   }
   

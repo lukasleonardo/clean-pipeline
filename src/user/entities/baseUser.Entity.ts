@@ -1,7 +1,7 @@
 import { Column, PrimaryGeneratedColumn } from "typeorm"
-import { IUser } from "../interfaces/user.interface"
+import { IBaseUser } from "../interfaces/baseUser.interface"
 
-export class BaseUserEntity implements IUser {
+export class BaseUserEntity implements IBaseUser {
 @PrimaryGeneratedColumn()  
 Id:number
 @Column({length:50})
@@ -16,6 +16,5 @@ province: string
 state: string
 @Column({length:20})
 Cpf:string
-@Column()
-isAdmin:boolean
+
 }
