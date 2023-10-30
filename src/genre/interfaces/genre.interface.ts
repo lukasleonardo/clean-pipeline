@@ -1,4 +1,4 @@
 export interface IGenre {
-  id:number;
+  id?:number;
   name:string;
 }

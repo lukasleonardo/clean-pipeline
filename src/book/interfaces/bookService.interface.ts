@@ -1,6 +1,6 @@
 
 export interface IBookService {
   //exemplo
-create(createBookDto);
+create(createBookD);
 
 }

@@ -4,18 +4,20 @@ import { IUser } from "../interfaces/user.interface"
 export class User implements IUser {
 @PrimaryGeneratedColumn()  
 Id:number
-@Column()
+@Column({length:50})
 nome:string
-@Column()
+@Column({length:50})
 login: string
-@Column()
+@Column({length:50})
 senha: string
-@Column()
+@Column({length:50})
 province: string
 @Column()
 idFavoritos: []
-@Column()
+@Column({length:20})
 state: string
-@Column()
+@Column({length:20})
 Cpf:string
+@Column()
+isAdmin:boolean
 }

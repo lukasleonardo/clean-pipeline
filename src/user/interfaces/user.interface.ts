@@ -7,4 +7,5 @@ province: string
 idFavoritos: []
 state: string
 Cpf:string
+isAdmin:boolean
 }
