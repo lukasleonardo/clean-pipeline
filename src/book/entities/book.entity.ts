@@ -1,11 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, Double, ManyToOne, JoinTable, OneToOne, JoinColumn} from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToOne, JoinColumn} from "typeorm"
 import { IBook } from "../interfaces/book.interface";
 import { GenreEntity } from "../../genre/entities/genre.entity";
-import { User } from "../../user/entities/user.entity";
+import { UserEntity } from "../../user/entities/user.entity";
+
 
 
 @Entity('Book')
 export class Book implements IBook{
+  idUser: UserEntity;
   @PrimaryGeneratedColumn()
   id:number;
   
@@ -21,12 +23,22 @@ export class Book implements IBook{
   author:string;
   @Column({length:50})
   state:string;
-  @Column()
-  value:Double;
+  @Column('double precision')
+  value:number;
   //Alguma coisa precisa ser feita aqui!!!!
-  @OneToOne(type => User, book => Book)
-  user: User
-  @JoinTable()
-  idUser:User;
+
+  @OneToOne( () => UserEntity)
+  @JoinColumn()
+  user: UserEntity;
+
+  @Column()
+  loanDate:Date
+
+  @Column()
+  expiratedLoanDate:Date
+
+  @OneToOne( () => UserEntity)
+  @JoinColumn()
+  createdBy:UserEntity;
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -22,7 +22,12 @@ export class BookController {
     return this.bookService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Get('genre/:id')
+  findByGenre(@Param('') genreId: number) {
+    return `This action returns a #${genreId} book`;
+  }
+
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(+id, updateBookDto);
   }
@@ -30,5 +35,10 @@ export class BookController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.bookService.remove(+id);
+  }
+
+  @Post('fine/:id')
+  applyFine(id:number){
+    return 'taxa por atraso na devolução'
   }
 }
