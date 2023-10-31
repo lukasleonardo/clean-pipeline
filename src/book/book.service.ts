@@ -28,7 +28,7 @@ export class BookService implements IBookService {
   remove(id: number) {
     return `This action removes a #${id} book`;
   }
-
+  // definir regra de negocio!!!
   applyFine(id:number){
     return 'taxa por atraso na devolução'
   }

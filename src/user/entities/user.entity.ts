@@ -1,6 +1,7 @@
-import { Column, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Book } from "../../book/entities/book.entity"
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { BookEntity } from "../../book/entities/book.entity"
 
+@Entity('user')
 export class UserEntity {
 
 @PrimaryGeneratedColumn()  
@@ -18,16 +19,14 @@ Cpf:string
 @Column('double precision')
 fines:number
 
-@Column({default:false})
-isAdmin:boolean
-@Column()
+@Column({default:'USER'})
+isAdmin:string
+@Column({default:'DISPONIVEL'})
 state: string
-@OneToOne(() => Book)
-@JoinColumn()
-book: Book[]
-@Column()
-idFavoritos: []
 
+@OneToOne(() => BookEntity)
+@JoinColumn()
+idFavoritos: BookEntity[]
 }
 
 

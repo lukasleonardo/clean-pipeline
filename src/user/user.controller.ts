@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Book } from '../book/entities/book.entity';
+import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
 
 
@@ -19,7 +19,6 @@ export class UserController {
   findForFine(@Param('id') id:number){
 
   }
-
 
   @Get()
   findAll() {
@@ -59,13 +58,14 @@ export class UserController {
   setBookState(@Param('id') bookId:number){
     return 'Altera o status do livro';
   }
-
+  /// ISTO ESTA CERTO ?
   @Get('/fines')  
-  retrieveAllFines(ChargedUsers:Array<UserEntity>){
+  retrieveAllFines(ChargedUsers:UserEntity[]){
     return 'Retorna usuarios multados';
   }
+  // ISTO ESTA CERTO
   @Get('books')
-  borrowedBooks(borrowedbooks: Array<Book>){
+  borrowedBooks(borrowedbooks: BookEntity[]){
     return 'retorna todos os livros emprestado'
   }
 
@@ -82,7 +82,7 @@ export class UserController {
   }
   // como mostrar array no bagulho
   @Get('bookmark')
-  findAllBookmarked(...bookId: Array<Book>){
+  findAllBookmarked(...bookId: BookEntity[]){
   }
 
   // recebe um livro ou um id

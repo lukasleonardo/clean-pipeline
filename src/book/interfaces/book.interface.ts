@@ -7,15 +7,17 @@ export interface IBook {
   id:number;
   name: string;
   description: string;
-  idGenre:GenreEntity[];
   author:string;
-  state:string;
   value:number;
-  
-  idUser:UserEntity;
-  user: UserEntity;
+
+  state:string;
 
   loanDate:Date;
   expiratedLoanDate:Date;
+
+  idGenre:GenreEntity[];
+  user: UserEntity;
+  createdBy:UserEntity;
+  createdAt:Date;
 
 }

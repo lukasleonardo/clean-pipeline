@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
-import { Book } from '../book/entities/book.entity';
+import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
 
 @Injectable()
@@ -40,9 +40,6 @@ export class UserService implements IUserService {
 
 
   remove(id: number) {
-
-      /* Validar Se esta deletando usuario ou admin */
-
     return `This action removes a #${id} user`;
   }
 
@@ -60,16 +57,17 @@ export class UserService implements IUserService {
     return 'Altera o status do livro';
   }
 
+// daqui pra baixo e tudo duvida!
   retrieveAllFines(ChargedUsers:Array<UserEntity>){
     return 'Retorna usuarios multados';
   }
 
-  borrowedBooks(borrowedbooks: Array<Book>){
+  borrowedBooks(borrowedbooks: Array<BookEntity>){
     return 'retorna todos os livros emprestado'
   }
 
   //*LIVROS */
-// daqui pra baixo e tudo duvida!
+
   bookmarkBook(bookId:number){
     return 'adciona livro dos favoritos';
   }
@@ -77,8 +75,8 @@ export class UserService implements IUserService {
   removeBookmarkBook(bookId:number){
     return 'remove livro dos favoritos';
   }
-// como mostrar array no bagulho
-  findAllBookmarked(...bookId: Array<Book>){
+// como mostrar array no bagulho //  tip LIST>
+  findAllBookmarked(...bookId: BookEntity[]){
 
   }
 

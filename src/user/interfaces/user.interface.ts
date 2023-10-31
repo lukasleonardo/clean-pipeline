@@ -1,3 +1,5 @@
+import { BookEntity } from "../../book/entities/book.entity"
+
 export interface IUser  {
   
 Id:number
@@ -7,10 +9,8 @@ senha: string
 province: string
 Cpf:string
 fines:number  
-idFavoritos: []
 
-// ENUM ??
 state: string
-// ENUM ??
-isAdmin:boolean
+isAdmin:string
+idFavoritos: BookEntity[]
 }

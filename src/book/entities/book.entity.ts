@@ -3,42 +3,43 @@ import { IBook } from "../interfaces/book.interface";
 import { GenreEntity } from "../../genre/entities/genre.entity";
 import { UserEntity } from "../../user/entities/user.entity";
 
-
-
 @Entity('Book')
-export class Book implements IBook{
-  idUser: UserEntity;
+export class BookEntity implements IBook{
+
   @PrimaryGeneratedColumn()
   id:number;
-  
   @Column({length:50})
   name: string;
   @Column({length:3000})
   description: string;
-  //Alguma coisa precisa ser feita aqui!!!!
-  @ManyToMany(() => GenreEntity, (GenreEntity)=> GenreEntity.id)
-  @JoinTable()
-  idGenre:GenreEntity[];
   @Column({length:50})
   author:string;
-  @Column({length:50})
-  state:string;
   @Column('double precision')
   value:number;
-  //Alguma coisa precisa ser feita aqui!!!!
+  
+  @Column({default:'DISPONIVEL'})
+  state:string;
+  // datas de empréstimo e devolução
+  @Column()
+  loanDate:Date
+  @Column()
+  expiratedLoanDate:Date
 
+  // MANY TO MANY ???
+  @ManyToMany((GenreEntity)=> GenreEntity.id)
+  @JoinTable()
+  idGenre:GenreEntity[];
+  // referente ao usuario que esta em posse do livro
   @OneToOne( () => UserEntity)
   @JoinColumn()
   user: UserEntity;
 
-  @Column()
-  loanDate:Date
-
-  @Column()
-  expiratedLoanDate:Date
-
+  // administrador que cadastrou o livro
   @OneToOne( () => UserEntity)
   @JoinColumn()
   createdBy:UserEntity;
+  
+  @Column()
+  createdAt:Date;
 
 }
