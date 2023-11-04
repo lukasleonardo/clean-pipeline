@@ -17,11 +17,19 @@ export class BookService implements IBookService {
     return `This action returns a #${id} book`;
   }
 
+  findByGenre(genreId: number) {
+    return `This action returns a #${genreId} book`;
+  }
+
   update(id: number, updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} book`;
+  }
+  // definir regra de negocio!!!
+  applyFine(id: number) {
+    return 'taxa por atraso na devolução';
   }
 }

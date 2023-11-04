@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 
@@ -13,6 +21,6 @@ export class GenreController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.genreService.remove(+id);
+    return this.genreService.remove(id);
   }
 }

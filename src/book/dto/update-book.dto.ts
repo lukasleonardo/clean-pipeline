@@ -1,3 +1,1 @@
-export class UpdateBookDto{
-
-}
+export class UpdateBookDto {}

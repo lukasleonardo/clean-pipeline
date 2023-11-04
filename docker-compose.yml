@@ -21,7 +21,7 @@ services:
       - db-data:/bitnami/postgresql
     environment:
       - POSTGRESQL_DATABASE=${POSTGRES_DB}
-      - POSTGRESQL_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
       - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - docker-network

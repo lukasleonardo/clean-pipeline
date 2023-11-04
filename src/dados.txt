@@ -1,0 +1,21 @@
+ // DUVIDAS
+ //usuario
+ - historico de empréstimo;
+
+
+
+// 1 - DEVER DE CASA SABER O RETORNO DE CADA FUNÇÃO E APLICAR NAS INTERFACES DE SERVIÇO
+
+// 2 - verificar como ficam definidos os arrays no user.controller linha 62
+
+// 3 - definir regra de negocio da taxa do livro
+
+// 4 - como especificar relação 1 para 1 com livro e usuario, apresenta erro ao gerar id das tabelas de livro
+
+"[Nest] 15988  - 31/10/2023, 11:18:21   ERROR [TypeOrmModule] Unable to connect to the database. Retrying (9)...
+TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.type (C:\Programacao\clean-pipeline\src\book\entities\book.entity.ts:29:43)
+    at new RelationMetadata (C:\Programacao\clean-pipeline\src\metadata\RelationMetadata.ts:343:29)
+    at C:\Programacao\clean-pipeline\src\metadata-builder\EntityMetadataBuilder.ts:714:24
+    at Array.map (<anonymous>)
+    at EntityMetadataBuilder.computeEntityMetadataStep1 (C:\Programacao\clean-pipeline\src\metadata-builder\EntityMetadataBuilder.ts:693:14)"

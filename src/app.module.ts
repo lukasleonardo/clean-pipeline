@@ -7,10 +7,14 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 
-
-
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal:true}), GenreModule, BookModule, UserModule, DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    GenreModule,
+    BookModule,
+    UserModule,
+    DatabaseModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
