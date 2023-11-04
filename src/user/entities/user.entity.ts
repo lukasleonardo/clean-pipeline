@@ -29,7 +29,6 @@ export class UserEntity {
   @Column({ default: 'DISPONIVEL' })
   state: string;
 
-  @OneToOne(() => BookEntity)
-  @JoinColumn()
-  idFavoritos: BookEntity[];
+  @Column({ type: 'jsonb', array: true, nullable: true })
+  idFavorites: string[];
 }

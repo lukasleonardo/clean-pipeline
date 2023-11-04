@@ -6,10 +6,12 @@ import {
   JoinTable,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
 import { UserEntity } from '../../user/entities/user.entity';
+import { v4 as uuidV4 } from 'uuid';
 
 @Entity('Book')
 export class BookEntity implements IBook {
@@ -33,9 +35,13 @@ export class BookEntity implements IBook {
   expiratedLoanDate: Date;
 
   // MANY TO MANY ???
-  @ManyToMany((GenreEntity) => GenreEntity)
-  @JoinTable()
-  idGenre: GenreEntity[];
+  @ManyToMany(() => GenreEntity)
+  @JoinTable({
+    name: 'genres_book',
+    joinColumns: [{ name: 'book_id' }], // origin table;
+    inverseJoinColumns: [{ name: 'genre_id' }], // relation table;
+  })
+  genre: GenreEntity[];
   // referente ao usuario que esta em posse do livro
   @OneToOne(() => UserEntity)
   @JoinColumn()
@@ -46,6 +52,14 @@ export class BookEntity implements IBook {
   @JoinColumn()
   createdBy: UserEntity;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
+
+  constructor() {
+    if (!this.id) {
+      this.id = uuidV4();
+    }
+  }
 }
+
+

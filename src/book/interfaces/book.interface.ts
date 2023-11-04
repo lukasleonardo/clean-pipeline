@@ -13,7 +13,7 @@ export interface IBook {
   loanDate: Date;
   expiratedLoanDate: Date;
 
-  idGenre: GenreEntity[];
+  genre: GenreEntity[];
   user: UserEntity;
   createdBy: UserEntity;
   createdAt: Date;
