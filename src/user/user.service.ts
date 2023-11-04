@@ -9,22 +9,16 @@ import { IUserService } from './interfaces/userService.interface';
 
 @Injectable()
 export class UserService implements IUserService {
-
-  
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly entityManager: EntityManager
-  ){
-
-  }
+    private readonly entityManager: EntityManager,
+  ) {}
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findForFine(id:number){
-
-  }
+  findForFine(id: number) {}
 
   findAll() {
     return `This action returns all user`;
@@ -38,51 +32,47 @@ export class UserService implements IUserService {
     return `This action updates a #${id} user`;
   }
 
-
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
 
-  auth(username:string, password:string){
-      // PASSAPORT.JS
+  auth(username: string, password: string) {
+    // PASSAPORT.JS
     return 'logado';
   }
 
   /*ADMINISTRADOR*/
-  setToAdmin(id:number){
+  setToAdmin(id: number) {
     return 'marca um usuario como admin';
   }
 
-  setBookState(bookId:number){
+  setBookState(bookId: number) {
     return 'Altera o status do livro';
   }
 
-// daqui pra baixo e tudo duvida!
-  retrieveAllFines(ChargedUsers:Array<UserEntity>){
+  // daqui pra baixo e tudo duvida!
+  retrieveAllFines(ChargedUsers: Array<UserEntity>) {
     return 'Retorna usuarios multados';
   }
 
-  borrowedBooks(borrowedbooks: Array<BookEntity>){
-    return 'retorna todos os livros emprestado'
+  borrowedBooks(borrowedbooks: Array<BookEntity>) {
+    return 'retorna todos os livros emprestado';
   }
 
   //*LIVROS */
 
-  bookmarkBook(bookId:number){
+  bookmarkBook(bookId: number) {
     return 'adciona livro dos favoritos';
   }
 
-  removeBookmarkBook(bookId:number){
+  removeBookmarkBook(bookId: number) {
     return 'remove livro dos favoritos';
   }
-// como mostrar array no bagulho //  tip LIST>
-  findAllBookmarked(...bookId: BookEntity[]){
+  // como mostrar array no bagulho //  tip LIST>
+  findAllBookmarked(...bookId: BookEntity[]) {}
 
-  }
-
-
-// recebe um livro ou um id
-  requestBook(bookId:number){
+  // recebe um livro ou um id
+  requestBook(bookId: number) {
     return 'solicita livro para empréstimo';
   }
 }

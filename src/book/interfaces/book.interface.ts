@@ -1,23 +1,20 @@
-
-import { GenreEntity } from "../../genre/entities/genre.entity";
-import { UserEntity } from "../../user/entities/user.entity";
-
+import { GenreEntity } from '../../genre/entities/genre.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export interface IBook {
-  id:number;
+  id: number;
   name: string;
   description: string;
-  author:string;
-  value:number;
+  author: string;
+  value: number;
 
-  state:string;
+  state: string;
 
-  loanDate:Date;
-  expiratedLoanDate:Date;
+  loanDate: Date;
+  expiratedLoanDate: Date;
 
-  idGenre:GenreEntity[];
+  idGenre: GenreEntity[];
   user: UserEntity;
-  createdBy:UserEntity;
-  createdAt:Date;
-
+  createdBy: UserEntity;
+  createdAt: Date;
 }

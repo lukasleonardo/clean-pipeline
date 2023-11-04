@@ -1,3 +1,1 @@
-export class CreateBookDto{
-
-}
+export class CreateBookDto {}

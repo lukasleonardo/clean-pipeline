@@ -1,11 +1,11 @@
 enum roles {
   admin = 'ADMIN',
-  user = 'USER'
+  user = 'USER',
 }
 
 enum objectState {
   disponivel = 'DISPONIVEL',
-  indisponivel = 'INDISPONIVEL'
+  indisponivel = 'INDISPONIVEL',
 }
 
-export {objectState, roles}
+export { objectState, roles };

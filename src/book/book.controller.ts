@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -38,7 +46,7 @@ export class BookController {
   }
 
   @Post('fine/:id')
-  applyFine(id:number){
-    return 'taxa por atraso na devolução'
+  applyFine(id: number) {
+    return 'taxa por atraso na devolução';
   }
 }

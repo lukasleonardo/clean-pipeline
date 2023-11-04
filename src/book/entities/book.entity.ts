@@ -1,45 +1,51 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToOne, JoinColumn} from "typeorm"
-import { IBook } from "../interfaces/book.interface";
-import { GenreEntity } from "../../genre/entities/genre.entity";
-import { UserEntity } from "../../user/entities/user.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { IBook } from '../interfaces/book.interface';
+import { GenreEntity } from '../../genre/entities/genre.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity('Book')
-export class BookEntity implements IBook{
-
+export class BookEntity implements IBook {
   @PrimaryGeneratedColumn()
-  id:number;
-  @Column({length:50})
+  id: number;
+  @Column({ length: 50 })
   name: string;
-  @Column({length:3000})
+  @Column({ length: 3000 })
   description: string;
-  @Column({length:50})
-  author:string;
+  @Column({ length: 50 })
+  author: string;
   @Column('double precision')
-  value:number;
-  
-  @Column({default:'DISPONIVEL'})
-  state:string;
+  value: number;
+
+  @Column({ default: 'DISPONIVEL' })
+  state: string;
   // datas de empréstimo e devolução
   @Column()
-  loanDate:Date
+  loanDate: Date;
   @Column()
-  expiratedLoanDate:Date
+  expiratedLoanDate: Date;
 
   // MANY TO MANY ???
-  @ManyToMany((GenreEntity)=> GenreEntity.id)
+  @ManyToMany((GenreEntity) => GenreEntity)
   @JoinTable()
-  idGenre:GenreEntity[];
+  idGenre: GenreEntity[];
   // referente ao usuario que esta em posse do livro
-  @OneToOne( () => UserEntity)
+  @OneToOne(() => UserEntity)
   @JoinColumn()
   user: UserEntity;
 
   // administrador que cadastrou o livro
-  @OneToOne( () => UserEntity)
+  @OneToOne(() => UserEntity)
   @JoinColumn()
-  createdBy:UserEntity;
-  
-  @Column()
-  createdAt:Date;
+  createdBy: UserEntity;
 
+  @Column()
+  createdAt: Date;
 }

@@ -1,10 +1,17 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
-
 
 @Controller('user')
 export class UserController {
@@ -16,9 +23,7 @@ export class UserController {
   }
 
   @Get('fine/:id')
-  findForFine(@Param('id') id:number){
-
-  }
+  findForFine(@Param('id') id: number) {}
 
   @Get()
   findAll() {
@@ -40,57 +45,52 @@ export class UserController {
     return this.userService.remove(+id);
   }
 
-
   // ANALISAR!!!!! à PERGUNTAR
   @Post()
-  auth(@Body() username:string, password:string){
-      // PASSAPORT.JS
+  auth(@Body() username: string, password: string) {
+    // PASSAPORT.JS
     return 'logado';
   }
 
   /*ADMINISTRADOR*/
   @Post('set/admin/:id')
-  setToAdmin(@Param('id') id:number){
+  setToAdmin(@Param('id') id: number) {
     return 'marca um usuario como admin';
   }
 
   @Post('set/book/:id')
-  setBookState(@Param('id') bookId:number){
+  setBookState(@Param('id') bookId: number) {
     return 'Altera o status do livro';
   }
   /// ISTO ESTA CERTO ?
-  @Get('/fines')  
-  retrieveAllFines(ChargedUsers:UserEntity[]){
+  @Get('/fines')
+  retrieveAllFines(ChargedUsers: UserEntity[]) {
     return 'Retorna usuarios multados';
   }
   // ISTO ESTA CERTO
   @Get('books')
-  borrowedBooks(borrowedbooks: BookEntity[]){
-    return 'retorna todos os livros emprestado'
+  borrowedBooks(borrowedbooks: BookEntity[]) {
+    return 'retorna todos os livros emprestado';
   }
 
   //*LIVROS */
   // daqui pra baixo e tudo duvida!
   @Post('bookmark/:id')
-  bookmarkBook(@Param('id') bookId:number){
+  bookmarkBook(@Param('id') bookId: number) {
     return 'adciona livro dos favoritos';
   }
 
   @Delete('bookmark/:id')
-  removeBookmarkBook(@Param('id') bookId:number){
+  removeBookmarkBook(@Param('id') bookId: number) {
     return 'remove livro dos favoritos';
   }
   // como mostrar array no bagulho
   @Get('bookmark')
-  findAllBookmarked(...bookId: BookEntity[]){
-  }
+  findAllBookmarked(...bookId: BookEntity[]) {}
 
   // recebe um livro ou um id
   @Post('request/:id')
-  requestBook(@Param('id') bookId:number){
+  requestBook(@Param('id') bookId: number) {
     return 'solicita livro para empréstimo';
   }
-  
-
-
 }
