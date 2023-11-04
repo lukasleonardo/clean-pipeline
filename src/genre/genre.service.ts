@@ -12,7 +12,7 @@ export class GenreService implements IGenreService {
   constructor(
     @InjectRepository(GenreEntity)
     private readonly genreRepository: Repository<GenreEntity>,
-    private readonly entityManager: EntityManager,
+    //private readonly entityManager: EntityManager,
   ) {}
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
@@ -33,7 +33,7 @@ export class GenreService implements IGenreService {
       );
       }
 
-    const errors = await validate(newGenre,{dismissDefaultMessages: true});
+    const errors = await validate(newGenre);
     if (errors.length > 0) {
       const _errors = { genre: 'Genre input is not valid.' };
       throw new HttpException(
@@ -41,9 +41,8 @@ export class GenreService implements IGenreService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
-      const savedGenre = await this.entityManager.getRepository(GenreEntity)
-      savedGenre.save(newGenre)
-      return newGenre;
+      const savedGenre = await this.genreRepository.save(newGenre)
+      return savedGenre;
     }
     
   }
