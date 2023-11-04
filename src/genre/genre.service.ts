@@ -16,7 +16,6 @@ export class GenreService implements IGenreService {
   ) {}
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
-    // Validação de Genero já existente
 
     //desestruturação de objeto
     const { name } = createGenreDto;
