@@ -21,6 +21,6 @@ export class GenreController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.genreService.remove(+id);
+    return this.genreService.remove(id);
   }
 }
