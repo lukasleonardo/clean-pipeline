@@ -42,6 +42,7 @@ export class BookEntity implements IBook {
     inverseJoinColumns: [{ name: 'genre_id' }], // relation table;
   })
   genre: GenreEntity[];
+
   // referente ao usuario que esta em posse do livro
   @OneToOne(() => UserEntity)
   @JoinColumn()
@@ -61,5 +62,3 @@ export class BookEntity implements IBook {
     }
   }
 }
-
-
