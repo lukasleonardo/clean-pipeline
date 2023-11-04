@@ -32,17 +32,17 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 
   // ANALISAR!!!!! à PERGUNTAR
@@ -54,12 +54,12 @@ export class UserController {
 
   /*ADMINISTRADOR*/
   @Post('set/admin/:id')
-  setToAdmin(@Param('id') id: number) {
+  setToAdmin(@Param('id') id: string) {
     return 'marca um usuario como admin';
   }
 
   @Post('set/book/:id')
-  setBookState(@Param('id') bookId: number) {
+  setBookState(@Param('id') bookId: string) {
     return 'Altera o status do livro';
   }
   /// ISTO ESTA CERTO ?
@@ -76,12 +76,12 @@ export class UserController {
   //*LIVROS */
   // daqui pra baixo e tudo duvida!
   @Post('bookmark/:id')
-  bookmarkBook(@Param('id') bookId: number) {
+  bookmarkBook(@Param('id') bookId: string) {
     return 'adciona livro dos favoritos';
   }
 
   @Delete('bookmark/:id')
-  removeBookmarkBook(@Param('id') bookId: number) {
+  removeBookmarkBook(@Param('id') bookId: string) {
     return 'remove livro dos favoritos';
   }
   // como mostrar array no bagulho
@@ -90,7 +90,7 @@ export class UserController {
 
   // recebe um livro ou um id
   @Post('request/:id')
-  requestBook(@Param('id') bookId: number) {
+  requestBook(@Param('id') bookId: string) {
     return 'solicita livro para empréstimo';
   }
 }

@@ -1,18 +1,20 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, isNotEmpty } from 'class-validator';
 import { roles } from '../../shared/global.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  readonly nome: string;
-  @IsNotEmpty()
-  readonly Cpf: string;
-
-  @IsNotEmpty()
+  readonly name: string;
+  //@IsNotEmpty()
+  readonly cpf: string;
+  //@IsNotEmpty()
   readonly login: string;
-  @IsNotEmpty()
-  readonly senha: string;
-
+  //@IsNotEmpty()
+  readonly password: string;
+  //@IsNotEmpty()
+  readonly fines: number
   readonly province: string;
+  readonly isAdmin: roles;
   readonly state: string;
   readonly type: roles;
+  readonly idFavorites: string[];
 }

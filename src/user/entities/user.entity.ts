@@ -1,26 +1,24 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
-import { BookEntity } from '../../book/entities/book.entity';
+import { v4 as uuidV4 } from 'uuid';
 
 @Entity('user')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  Id: number;
+  @PrimaryColumn()
+  id: string;
   @Column({ length: 50 })
-  nome: string;
+  name: string;
   @Column({ length: 50 })
   login: string;
   @Column({ length: 50 })
-  senha: string;
+  password: string;
   @Column({ length: 50 })
   province: string;
   @Column({ length: 20 })
-  Cpf: string;
+  cpf: string;
   @Column('double precision')
   fines: number;
 
@@ -31,4 +29,9 @@ export class UserEntity {
 
   @Column({ type: 'jsonb', array: true, nullable: true })
   idFavorites: string[];
+  constructor() {
+    if (!this.id) {
+      this.id = uuidV4();
+    }
+  }
 }
