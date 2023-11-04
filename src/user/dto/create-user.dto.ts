@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { roles } from '../../shared/global.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -13,4 +14,5 @@ export class CreateUserDto {
 
   readonly province: string;
   readonly state: string;
+  readonly type: roles;
 }

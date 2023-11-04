@@ -23,7 +23,7 @@ export class UserController {
   }
 
   @Get('fine/:id')
-  findForFine(@Param('id') id: number) {}
+  findForFine(@Param('id') id: string) {}
 
   @Get()
   findAll() {
