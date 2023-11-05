@@ -18,7 +18,6 @@ export class UserService implements IUserService {
     private readonly entityManager: EntityManager,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    //const userNew = new UserEntity()
     const { name, login, password, province, cpf, fines, isAdmin, state, idFavorites } = createUserDto;
     const newUser = new UserEntity()
     newUser.name = name
