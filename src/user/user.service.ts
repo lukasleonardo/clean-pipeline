@@ -68,33 +68,40 @@ export class UserService implements IUserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const checkId = await this.userRepository.findOneBy({id});
-    if(!checkId){
+    const user = await this.userRepository.findOneBy({id});
+    if(!user){
       const error = {user: 'user not found'};
       throw new HttpException(
         {message: 'Input data validation failed', error },
         HttpStatus.NOT_FOUND,
       );
     }
-    else {
-      const { name, login, password, province, cpf, fines, isAdmin, state, idFavorites } = updateUserDto;
-      const user = new UserEntity();
-      user.name = name;
-      user.login = login;
-      user.password = password;
-      user.province = province;
-      user.cpf = cpf;
-      user.fines = fines;
-      user.isAdmin = isAdmin;
-      user.state = state;
-      const checkUser = await this.userRepository.findOneBy({login: login})
-      if (checkUser){
-        const error = {user: 'user already exists'};
-        throw new HttpException(
-          {message: 'Input data validation failed', error },
-          HttpStatus.BAD_REQUEST,
-        );
+
+    if(updateUserDto.name){
+      user.name = updateUserDto.name;
+    }
+    if(user.login == updateUserDto.login){
+      const error = {user: 'login already exists'};
+      throw new HttpException(
+        {message: 'Input data validation failed', error },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+      else{
+        user.login = updateUserDto.login;
       }
+      user.login = updateUserDto.login;
+    
+    if(updateUserDto.password){
+      user.password = updateUserDto.password;
+    }
+    if(updateUserDto.province){
+      user.province = updateUserDto.province;
+    }
+    if(updateUserDto.name){
+      user.name = updateUserDto.name;
+    }
+   
 
     const errors = await validate(user);
     if (errors.length > 0){
@@ -106,11 +113,20 @@ export class UserService implements IUserService {
     }
       const userUpdate = await this.userRepository.save(user);
       return userUpdate;
-    } 
+    
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const user = await this.userRepository.findOneBy({id});
+    if (!user){
+      const error = {user: 'user not found'};
+      throw new HttpException(
+        {message: 'Input data validation failed', error },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    await this.userRepository.remove(user);
+    return true;
   }
 
   auth(username: string, password: string) {
