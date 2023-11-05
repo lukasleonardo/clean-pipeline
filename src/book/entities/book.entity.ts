@@ -1,23 +1,25 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToMany,
   JoinTable,
   OneToOne,
   JoinColumn,
   CreateDateColumn,
+  PrimaryColumn,
+  Timestamp,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 import { v4 as uuidV4 } from 'uuid';
 
+
 @Entity('Book')
 export class BookEntity implements IBook {
-  @PrimaryGeneratedColumn()
-  id: number;
-  @Column({ length: 50 })
+  @PrimaryColumn()
+  id: string;
+  @Column()
   name: string;
   @Column({ length: 3000 })
   description: string;
@@ -26,15 +28,9 @@ export class BookEntity implements IBook {
   @Column('double precision')
   value: number;
 
-  @Column({ default: 'DISPONIVEL' })
-  state: string;
-  // datas de empréstimo e devolução
-  @Column()
-  loanDate: Date;
-  @Column()
-  expiratedLoanDate: Date;
+  @Column({ type:'varchar', default: 'DISPONIVEL' })
+  state?: string;
 
-  // MANY TO MANY ???
   @ManyToMany(() => GenreEntity)
   @JoinTable({
     name: 'genres_book',
@@ -43,22 +39,18 @@ export class BookEntity implements IBook {
   })
   genre: GenreEntity[];
 
-  // referente ao usuario que esta em posse do livro
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
-  user: UserEntity;
-
   // administrador que cadastrou o livro
   @OneToOne(() => UserEntity)
   @JoinColumn()
   createdBy: UserEntity;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({ type: 'timestamp', default: 'now()'})
+  createdAt?: Timestamp;
 
   constructor() {
     if (!this.id) {
       this.id = uuidV4();
     }
   }
+
 }
