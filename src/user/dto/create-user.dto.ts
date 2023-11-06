@@ -1,5 +1,5 @@
-import { IsNotEmpty, isNotEmpty } from 'class-validator';
-import { roles } from '../../shared/global.enum';
+import { IsNotEmpty } from 'class-validator';
+
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -13,8 +13,7 @@ export class CreateUserDto {
   //@IsNotEmpty()
   readonly fines: number
   readonly province: string;
-  readonly isAdmin: roles;
+  readonly isAdmin: string;
   readonly state: string;
-  readonly type: roles;
   readonly idFavorites: string[];
 }
