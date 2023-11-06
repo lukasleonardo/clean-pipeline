@@ -10,15 +10,12 @@ import { Repository } from 'typeorm';
 export class GenreService implements IGenreService {
   constructor(
     @InjectRepository(GenreEntity)
-    private readonly genreRepository: Repository<GenreEntity>,
+    private readonly genreRepository: Repository<GenreEntity>
   ) {}
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
     //desestruturação de objeto
     const { name } = createGenreDto;
-    const newGenre = new GenreEntity();
-    newGenre.name = name;
-
     // Verifica se já existe na tabela
     const genre = await this.genreRepository.findOneBy({ name: name });
     if (genre) {
@@ -28,6 +25,8 @@ export class GenreService implements IGenreService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const newGenre = new GenreEntity();
+    newGenre.name = name;
 
     const errors = await validate(newGenre);
     if (errors.length > 0) {
@@ -42,7 +41,7 @@ export class GenreService implements IGenreService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string){
     const genre = await this.genreRepository.findOneBy({ id });
     if (genre) {
       await this.genreRepository.delete(genre.id);
@@ -52,11 +51,10 @@ export class GenreService implements IGenreService {
       };
       return status;
     } else {
-      const status = {
-        message: 'Item not found',
-        status: HttpStatus.NOT_FOUND,
-      };
-      return status;
+      throw new HttpException(
+        { message: 'Genre not found' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

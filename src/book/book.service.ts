@@ -1,35 +1,136 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IBookService } from './interfaces/bookService.interface';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { BookEntity } from './entities/book.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
+import { objectState } from '../shared/global.enum';
 
 @Injectable()
 export class BookService implements IBookService {
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+  constructor(
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>
+  ){
+
+  }
+  async create(createBookDto: CreateBookDto):Promise<BookEntity> {
+
+    const {name, description, author, value, genreId} = createBookDto
+    const book = await this.bookRepository.findOneBy({ name: name });
+    if(book){
+      const error = { book: 'book already exists in table book' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const newBook = new BookEntity();
+    newBook.name=name;
+    newBook.description=description;
+    newBook.author=author;
+    newBook.value=value;
+    newBook.genre = [genreId]
+
+    const errors = await validate(newBook);
+    if (errors.length > 0) {
+      const errors = { book: 'book input is not valid.' };
+      throw new HttpException(
+        { message: 'Input data validation failed' + errors },
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      const savedBook = await this.bookRepository.save(newBook);
+      return savedBook;
+    }
+
   }
 
-  findAll() {
-    return `This action returns all book`;
+  async findAll():Promise<BookEntity[]>{
+    const book = await this.bookRepository.find();
+    if(!book){
+      throw new HttpException(
+        { message: 'No books have been found' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return book;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: string): Promise<BookEntity>{
+    const book = await this.bookRepository.findOneBy({ id });
+    if(!book){
+      throw new HttpException(
+        { message: 'No book found with this id' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return book;
   }
 
-  findByGenre(genreId: number) {
-    return `This action returns a #${genreId} book`;
+  async findByGenre(genreId: string) {
+
+    //Relações não funcionam
+    const book = this.bookRepository.createQueryBuilder('genres_books').leftJoin('book_id == :id',genreId)
+    if(!book){
+      throw new HttpException(
+        { message: 'No book found with this id' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return book;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: string, updateBookDto: UpdateBookDto):Promise<BookEntity> {
+    const {name, description, author, value, genreId} = updateBookDto
+    const newBook = await this.bookRepository.findOneBy({id});
+    if(!newBook){
+      const error = { book: 'book does not exists' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    newBook.name=name;
+    newBook.description=description;
+    newBook.author=author;
+    newBook.value=value;
+    newBook.genre = [genreId]
+
+    const errors = await validate(newBook);
+    if (errors.length > 0) {
+      const errors = { book: 'book input is not valid.' };
+      throw new HttpException(
+        { message: 'Input data validation failed' + errors },
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      const savedBook = await this.bookRepository.save(newBook);
+      return savedBook;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: string) {
+    const book = await this.bookRepository.findOneBy({ id });
+    if (book) {
+      await this.bookRepository.delete(book.id);
+      const status = {
+        message: 'Item removed successfully',
+        status: HttpStatus.OK,
+      };
+      return status;
+    } else {
+      throw new HttpException(
+        { message: 'book not found' },
+        HttpStatus.NOT_FOUND,
+      );
+    };
   }
   // definir regra de negocio!!!
-  applyFine(id: number) {
+  applyFine(id: string) {
     return 'taxa por atraso na devolução';
   }
 }
