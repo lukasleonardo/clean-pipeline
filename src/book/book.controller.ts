@@ -10,6 +10,8 @@ import {
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
+import { Roles } from '../shared/auth/roles.decorator';
+import { Role } from '../shared/auth/global.enum';
 
 @Controller('book')
 export class BookController {
@@ -48,5 +50,11 @@ export class BookController {
   @Post('fine/:id')
   applyFine(@Param('id') id: string) {
     return 'taxa por atraso na devolução';
+  }
+
+  @Post('set/:id')
+  @Roles(Role.admin)
+  setBookState(@Param('id') id: string) {
+    return this.bookService.setBookState(id);
   }
 }

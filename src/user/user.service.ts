@@ -6,8 +6,6 @@ import { EntityManager, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
-import { roles } from '../shared/global.enum';
-import { promises } from 'dns';
 import { validate } from 'class-validator';
 
 @Injectable()
@@ -138,9 +136,6 @@ export class UserService implements IUserService {
     return 'marca um usuario como admin';
   }
 
-  setBookState(bookId: string) {
-    return 'Altera o status do livro';
-  }
 
   // daqui pra baixo e tudo duvida!
   retrieveAllFines(ChargedUsers: Array<UserEntity>) {

@@ -34,14 +34,14 @@ export class BookEntity implements IBook {
   @ManyToMany(() => GenreEntity)
   @JoinTable({
     name: 'genres_book',
-    joinColumns: [{ name: 'book_id' }], // origin table;
+    joinColumns: [{ name: 'book_id', referencedColumnName:'id' }], // origin table;
     inverseJoinColumns: [{ name: 'genre_id' }], // relation table;
   })
   genre: GenreEntity[];
 
   // administrador que cadastrou o livro
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
+  @OneToOne(type => UserEntity)
+  @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
 
   @CreateDateColumn({ type: 'timestamp', default: 'now()'})

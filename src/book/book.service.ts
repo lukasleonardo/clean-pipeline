@@ -6,7 +6,7 @@ import { BookEntity } from './entities/book.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { objectState } from '../shared/global.enum';
+import { objectState } from '../shared/auth/global.enum';
 
 @Injectable()
 export class BookService implements IBookService {
@@ -132,5 +132,25 @@ export class BookService implements IBookService {
   // definir regra de negocio!!!
   applyFine(id: string) {
     return 'taxa por atraso na devolução';
+  }
+
+  async setBookState(id: string) {
+    const book = await this.bookRepository.findOneBy({ id });
+    if(!book){
+      throw new HttpException(
+        { message: 'No book found with this id' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if(book.state == objectState.disponivel){
+      book.state= objectState.indisponivel
+    }else{
+      book.state = objectState.disponivel
+    }
+    await this.bookRepository.save(book)
+    return book;
+
+    return 'Altera o status do livro';
   }
 }
