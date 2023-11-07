@@ -1,12 +1,12 @@
 import { BookEntity } from '../../book/entities/book.entity';
 
 export interface IUser {
-  Id: number;
+  id: number;
   nome: string;
   login: string;
-  senha: string;
+  password: string;
   province: string;
-  Cpf: string;
+  cpf: string;
   fines: number;
 
   state: string;

@@ -15,6 +15,5 @@ export class CreateUserDto {
   readonly province: string;
   readonly isAdmin: roles;
   readonly state: string;
-  readonly type: roles;
   readonly idFavorites: string[];
 }

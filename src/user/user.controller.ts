@@ -6,20 +6,31 @@ import {
   Param,
   Delete,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    private authService: AuthService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('login')
+  async login(@Request() req){
+    return this.authService.login(req.user);
   }
 
   @Get('fine/:id')
@@ -30,11 +41,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  @Get(':login')
+  findOne(@Param('login') login: string) {
+    return this.userService.findOne(login);
   }
-
+  
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
@@ -46,16 +57,16 @@ export class UserController {
   }
 
   // ANALISAR!!!!! à PERGUNTAR
-  @Post()
-  auth(@Body() username: string, password: string) {
+  //@Post()
+  //auth(@Body() login: string, password: string) {
     // PASSAPORT.JS
-    return 'logado';
-  }
+   // return 'logado';
+ //}
 
   /*ADMINISTRADOR*/
   @Post('set/admin/:id')
   setToAdmin(@Param('id') id: string) {
-    return 'marca um usuario como admin';
+    return this.userService.setToAdmin(id);
   }
 
   @Post('set/book/:id')

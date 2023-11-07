@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,8 +7,8 @@ import { UserEntity } from './entities/user.entity';
 import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
 import { roles } from '../shared/global.enum';
-import { promises } from 'dns';
 import { validate } from 'class-validator';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -23,7 +23,7 @@ export class UserService implements IUserService {
     const newUser = new UserEntity()
     newUser.name = name
     newUser.login = login
-    newUser.password = password
+    newUser.password = bcrypt.hashSync(password, 8)
     newUser.province = province
     newUser.cpf = cpf
     newUser.fines = fines
@@ -62,8 +62,8 @@ export class UserService implements IUserService {
     return listUsers;
   }
 
-  async findOne(id: string) {
-    const listUser = await this.userRepository.findOneBy({id});
+  async findOne(login: string) {
+    const listUser = await this.userRepository.findOneBy({login});
     return listUser;
   }
 
@@ -90,7 +90,6 @@ export class UserService implements IUserService {
       else{
         user.login = updateUserDto.login;
       }
-      user.login = updateUserDto.login;
     
     if(updateUserDto.password){
       user.password = updateUserDto.password;
@@ -129,14 +128,27 @@ export class UserService implements IUserService {
     return true;
   }
 
-  auth(username: string, password: string) {
+  //auth(username: string, password: string) {
     // PASSAPORT.JS
-    return 'logado';
-  }
+  //  return 'logado';
+  //}
 
   /*ADMINISTRADOR*/
-  setToAdmin(id: string) {
-    return 'marca um usuario como admin';
+  async setToAdmin(id: string) {
+    const user = await this.userRepository.findOneBy({id});
+
+    if (!user){
+      const error = {user: 'user not found'};
+      throw new HttpException(
+        {message: 'Input data validation failed', error },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+   
+    user.isAdmin = roles.admin;
+    
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
   }
 
   setBookState(bookId: string) {
