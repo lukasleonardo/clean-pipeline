@@ -7,7 +7,6 @@ import {
   Delete,
   Put,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,6 +15,8 @@ import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
+import { ILoginData } from './interfaces/user.interface';
+
 
 @Controller('user')
 export class UserController {
@@ -27,10 +28,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req){
-    return this.authService.login(req.user);
+  async login(@Body() loginData: ILoginData){
+    return this.authService.login(loginData);
   }
 
   @Get('fine/:id')
@@ -55,13 +55,6 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
-
-  // ANALISAR!!!!! à PERGUNTAR
-  //@Post()
-  //auth(@Body() login: string, password: string) {
-    // PASSAPORT.JS
-   // return 'logado';
- //}
 
   /*ADMINISTRADOR*/
   @Post('set/admin/:id')

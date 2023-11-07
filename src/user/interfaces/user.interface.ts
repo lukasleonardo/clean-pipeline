@@ -1,15 +1,4 @@
-import { BookEntity } from '../../book/entities/book.entity';
-
-export interface IUser {
-  id: number;
-  nome: string;
+export interface ILoginData {
   login: string;
   password: string;
-  province: string;
-  cpf: string;
-  fines: number;
-
-  state: string;
-  isAdmin: string;
-  idFavoritos: BookEntity[];
 }
