@@ -1,5 +1,5 @@
 import { IsEnum, IsPositive, IsString } from "class-validator";
-import { objectState } from "../../shared/auth/global.enum";
+import { objectState } from "../../shared/authorize/global.enum";
 import { GenreEntity } from "../../genre/entities/genre.entity";
 
 export class UpdateBookDto {
