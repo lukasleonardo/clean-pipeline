@@ -13,3 +13,4 @@ export interface IUser {
   isAdmin: string;
   idFavoritos: BookEntity[];
 }
+

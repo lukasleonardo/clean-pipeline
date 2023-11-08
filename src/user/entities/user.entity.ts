@@ -13,7 +13,7 @@ export class UserEntity {
   name: string;
   @Column({ length: 50 })
   login: string;
-  @Column({ length: 50 })
+  @Column({ length: 100 })
   password: string;
   @Column({ length: 50 })
   province: string;

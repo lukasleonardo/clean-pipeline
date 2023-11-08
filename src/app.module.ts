@@ -14,9 +14,9 @@ import { RolesGuard } from './shared/auth/roles.guard';
     ConfigModule.forRoot({ isGlobal: true }),
     GenreModule,
     BookModule,
-    UserModule,
     DatabaseModule,
     RentalsModule,
+
   ],
   controllers: [AppController],
   providers: [AppService,RolesGuard],
