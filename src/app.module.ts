@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { RentalsModule } from './rentals/rentals.module';
-import { RolesGuard } from './shared/auth/roles.guard';
+import { RolesGuard } from './shared/authorize/roles.guard';
 
 @Module({
   imports: [

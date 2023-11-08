@@ -10,8 +10,8 @@ import {
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { Roles } from '../shared/auth/roles.decorator';
-import { Role } from '../shared/auth/global.enum';
+import { Roles } from '../shared/authorize/roles.decorator';
+import { Role } from '../shared/global.enum';
 
 @Controller('book')
 export class BookController {
