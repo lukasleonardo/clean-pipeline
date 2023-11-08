@@ -6,7 +6,7 @@ import { BookEntity } from './entities/book.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { objectState } from '../shared/authorize/global.enum';
+import { objectState } from '../shared/global.enum';
 
 @Injectable()
 export class BookService implements IBookService {
