@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GenreService implements IGenreService {
+  findOneBy: any;
   constructor(
     @InjectRepository(GenreEntity)
     private readonly genreRepository: Repository<GenreEntity>

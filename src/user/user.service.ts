@@ -6,6 +6,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
+import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 
@@ -143,7 +144,7 @@ export class UserService implements IUserService {
       );
     }
    
-    user.isAdmin = roles.admin;
+    user.isAdmin = Role.admin;
     
     const savedUser = await this.userRepository.save(user);
     return savedUser;

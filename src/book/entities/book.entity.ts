@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   PrimaryColumn,
   Timestamp,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
@@ -15,9 +16,9 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { v4 as uuidV4 } from 'uuid';
 
 
-@Entity('Book')
+@Entity('book')
 export class BookEntity implements IBook {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
   name: string;
@@ -29,7 +30,7 @@ export class BookEntity implements IBook {
   value: number;
 
   @Column({ type:'varchar', default: 'DISPONIVEL' })
-  state?: string;
+  state: string;
 
   @ManyToMany(() => GenreEntity)
   @JoinTable({
@@ -39,18 +40,18 @@ export class BookEntity implements IBook {
   })
   genre: GenreEntity[];
 
-  // administrador que cadastrou o livro
-  @OneToOne(type => UserEntity)
+  // // administrador que cadastrou o livro
+  @OneToOne(() => UserEntity)
   @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
 
   @CreateDateColumn({ type: 'timestamp', default: 'now()'})
-  createdAt?: Timestamp;
+  createdAt: Timestamp;
 
-  constructor() {
-    if (!this.id) {
-      this.id = uuidV4();
-    }
-  }
+  // constructor() {
+  //   if (!this.id) {
+  //     this.id = uuidV4();
+  //   }
+  // }
 
 }
