@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { IGenre } from '../interfaces/genre.interface';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -15,4 +15,3 @@ export class GenreEntity implements IGenre {
     }
   }
 }
-

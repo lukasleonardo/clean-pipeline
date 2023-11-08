@@ -6,7 +6,8 @@ import { BookModule } from './book/book.module';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { RentalsModule } from './rentals/rentals.module';
+import { RolesGuard } from './shared/auth/roles.guard';
 
 @Module({
   imports: [
@@ -14,9 +15,10 @@ import { AuthModule } from './auth/auth.module';
     GenreModule,
     BookModule,
     DatabaseModule,
-    AuthModule,
+    RentalsModule,
+
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,RolesGuard],
 })
 export class AppModule {}

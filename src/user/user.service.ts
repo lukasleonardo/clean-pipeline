@@ -6,7 +6,6 @@ import { EntityManager, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
-import { roles } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 
@@ -18,7 +17,6 @@ export class UserService implements IUserService {
     private readonly entityManager: EntityManager,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    //const userNew = new UserEntity()
     const { name, login, password, province, cpf, fines, isAdmin, state, idFavorites } = createUserDto;
     const newUser = new UserEntity()
     newUser.name = name
@@ -151,9 +149,6 @@ export class UserService implements IUserService {
     return savedUser;
   }
 
-  setBookState(bookId: string) {
-    return 'Altera o status do livro';
-  }
 
   // daqui pra baixo e tudo duvida!
   retrieveAllFines(ChargedUsers: Array<UserEntity>) {
