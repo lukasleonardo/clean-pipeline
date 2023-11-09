@@ -28,7 +28,7 @@ export class GenreService implements IGenreService {
     }
     const newGenre = new GenreEntity();
     newGenre.name = name;
-
+    //s
     const errors = await validate(newGenre);
     if (errors.length > 0) {
       const errors = { genre: 'Genre input is not valid.' };

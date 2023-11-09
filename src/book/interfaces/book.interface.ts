@@ -10,7 +10,7 @@ export interface IBook {
   value: number;
   state: string;
 
-  genre: GenreEntity[];
+  genreList: GenreEntity[];
   // createdBy: UserEntity;
   createdAt: Timestamp;
 }

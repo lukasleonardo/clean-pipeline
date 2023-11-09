@@ -11,6 +11,6 @@ export class UpdateBookDto {
   author: string;
   @IsPositive()
   value: number;
-  genreId:GenreEntity
+  genres:GenreEntity[]
 
 }

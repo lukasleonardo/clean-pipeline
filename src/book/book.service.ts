@@ -3,10 +3,11 @@ import { IBookService } from './interfaces/bookService.interface';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookEntity } from './entities/book.entity';
-import { Repository } from 'typeorm';
+import { Repository, ArrayOperator } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
+import { GenreService } from '../genre/genre.service';
 
 @Injectable()
 export class BookService implements IBookService {
@@ -18,7 +19,7 @@ export class BookService implements IBookService {
   }
   async create(createBookDto: CreateBookDto):Promise<BookEntity> {
 
-    const {name, description, author, value, genreId} = createBookDto
+    const {name, description, author, value, genres} = createBookDto
     const book = await this.bookRepository.findOneBy({ name: name });
     if(book){
       const error = { book: 'book already exists in table book' };
@@ -33,7 +34,8 @@ export class BookService implements IBookService {
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
-    newBook.genre = [genreId]
+    newBook.genreList = genres;
+    
 
     const errors = await validate(newBook);
     if (errors.length > 0) {
@@ -71,10 +73,18 @@ export class BookService implements IBookService {
     return book;
   }
 
-  async findByGenre(genreId: string) {
-
+  async findByGenre(genreName: string) {
     //Relações não funcionam
-    const book = this.bookRepository.createQueryBuilder('genres_books').leftJoin('book_id == :id',genreId)
+    const book = this.bookRepository.find(
+      {
+        where:{
+          genreList:{
+            name:genreName
+          }
+        }
+      }
+    )
+
     if(!book){
       throw new HttpException(
         { message: 'No book found with this id' },
@@ -85,7 +95,7 @@ export class BookService implements IBookService {
   }
 
   async update(id: string, updateBookDto: UpdateBookDto):Promise<BookEntity> {
-    const {name, description, author, value, genreId} = updateBookDto
+    const {name, description, author, value, genres} = updateBookDto
     const newBook = await this.bookRepository.findOneBy({id});
     if(!newBook){
       const error = { book: 'book does not exists' };
@@ -98,7 +108,7 @@ export class BookService implements IBookService {
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
-    newBook.genre = [genreId]
+    newBook.genreList = genres
 
     const errors = await validate(newBook);
     if (errors.length > 0) {

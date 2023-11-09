@@ -9,6 +9,7 @@ import {
   PrimaryColumn,
   Timestamp,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
@@ -32,13 +33,19 @@ export class BookEntity implements IBook {
   @Column({ type:'varchar', default: 'DISPONIVEL' })
   state: string;
 
-  @ManyToMany(() => GenreEntity)
+  @ManyToMany(type => GenreEntity,{cascade:true})
   @JoinTable({
-    name: 'genres_book',
-    joinColumns: [{ name: 'book_id', referencedColumnName:'id' }], // origin table;
-    inverseJoinColumns: [{ name: 'genre_id' }], // relation table;
+    name: 'book_genres',
+    joinColumn: {
+      name: 'book_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'genres_id',
+      referencedColumnName: 'id',
+    }
   })
-  genre: GenreEntity[];
+  genreList: GenreEntity[];
 
   // // administrador que cadastrou o livro
   @OneToOne(() => UserEntity)
@@ -47,11 +54,5 @@ export class BookEntity implements IBook {
 
   @CreateDateColumn({ type: 'timestamp', default: 'now()'})
   createdAt: Timestamp;
-
-  // constructor() {
-  //   if (!this.id) {
-  //     this.id = uuidV4();
-  //   }
-  // }
 
 }
