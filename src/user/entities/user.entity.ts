@@ -1,25 +1,24 @@
 import {
   Column,
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuidV4 } from 'uuid';
 
 @Entity('user')
 export class UserEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column({ length: 50 })
+  @Column()
   name: string;
-  @Column({ length: 50 })
+  @Column()
   login: string;
-  @Column({ length: 100 })
+  @Column()
   password: string;
-  @Column({ length: 50 })
+  @Column()
   province: string;
-  @Column({ length: 20 })
+  @Column()
   cpf: string;
-  @Column('double precision')
+  @Column('double precision', { default: 0})
   fines: number;
 
   @Column({ default: 'USER' })
@@ -29,9 +28,5 @@ export class UserEntity {
 
   @Column({ type: 'jsonb', array: true, nullable: true })
   idFavorites: string[];
-  constructor() {
-    if (!this.id) {
-      this.id = uuidV4();
-    }
-  }
+
 }

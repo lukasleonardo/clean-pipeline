@@ -1,17 +1,16 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IGenre } from '../interfaces/genre.interface';
-import { v4 as uuidV4 } from 'uuid';
+import { BookEntity } from '../../book/entities/book.entity';
+//import { v4 as uuidV4 } from 'uuid';
 
 @Entity('genre')
 export class GenreEntity implements IGenre {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column({ length: 300 })
+  @Column()
   name: string;
 
+
   constructor() {
-    if (!this.id) {
-      this.id = uuidV4();
-    }
   }
 }

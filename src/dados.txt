@@ -8,3 +8,8 @@
 // 5 - Entender como funciona a Autorização das roles sobre as rotas.
 
 // 6 - Tabelas de relação não estão sendo preenchidas automaticamente. 
+
+
+-----------------------------------------------
+
+get iduser/idadmin para colocar na tabela de livros

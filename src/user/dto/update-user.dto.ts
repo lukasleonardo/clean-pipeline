@@ -10,9 +10,6 @@ export class UpdateUserDto {
     //@IsNotEmpty()
     readonly password: string;
     //@IsNotEmpty()
-    readonly fines: number
     readonly province: string;
-    readonly isAdmin: string;
-    readonly state: string;
-    readonly idFavorites: string[];
+
 }

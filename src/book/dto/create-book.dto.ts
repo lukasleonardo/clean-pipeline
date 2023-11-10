@@ -12,6 +12,6 @@ export class CreateBookDto {
   @IsPositive()
   value: number;
 
-  genreId:GenreEntity
+  genres:GenreEntity[]
 
 }
