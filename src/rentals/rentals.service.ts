@@ -23,4 +23,11 @@ export class RentalsService {
   remove(id: number) {
     return `This action removes a #${id} rental`;
   }
+
+  findForFine(id: string) {}
+
+  
+  retrieveAllFines() {
+    return 'Retorna usuarios multados';
+  }
 }

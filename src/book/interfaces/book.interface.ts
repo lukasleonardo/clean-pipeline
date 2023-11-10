@@ -8,9 +8,9 @@ export interface IBook {
   description: string;
   author: string;
   value: number;
-  state?: string;
+  state: string;
 
-  genre: GenreEntity[];
-  createdBy: UserEntity;
-  createdAt?: Timestamp;
+  genreList: GenreEntity[];
+  // createdBy: UserEntity;
+  createdAt: Timestamp;
 }

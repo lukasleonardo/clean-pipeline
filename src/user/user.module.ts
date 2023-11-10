@@ -12,4 +12,6 @@ import { ILoginData } from './interfaces/user.interface';
   providers: [UserService],
   exports: [UserService]
 })
+
+//
 export class UserModule {}

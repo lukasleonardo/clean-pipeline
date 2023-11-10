@@ -8,7 +8,6 @@ export interface IUser {
   province: string;
   cpf: string;
   fines: number;
-
   state: string;
   isAdmin: string;
   idFavoritos: BookEntity[];

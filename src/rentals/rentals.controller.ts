@@ -31,4 +31,13 @@ export class RentalsController {
   remove(@Param('id') id: string) {
     return this.rentalsService.remove(+id);
   }
+
+  @Get('fine/:id')
+  findForFine(@Param('id') id: string) {}
+
+  @Get('/fines')
+  retrieveAllFines() {
+    return 'Retorna usuarios multados';
+  }
+
 }
