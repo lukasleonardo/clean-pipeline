@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../../user/entities/user.entity";
+import { BookEntity } from "../../book/entities/book.entity";
 
 
 @Entity('rentals')
@@ -14,9 +15,13 @@ export class RentalEntity {
   @Column()
   expiratedLoanDate: Date;
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, {eager:true})
   @JoinColumn()
   user: UserEntity;
+
+  @OneToOne(() => BookEntity, {eager:true})
+  @JoinColumn()
+  book: BookEntity;
 
 
 }

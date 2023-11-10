@@ -9,8 +9,6 @@ import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
 import { GenreEntity } from '../genre/entities/genre.entity';
 
-
-
 @Injectable()
 export class BookService implements IBookService {
   constructor(
