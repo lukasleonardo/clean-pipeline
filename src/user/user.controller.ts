@@ -37,7 +37,7 @@ export class UserController {
   @Get('fine/:id')
   findForFine(@Param('id') id: string) {}
   
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.userService.findAll();
