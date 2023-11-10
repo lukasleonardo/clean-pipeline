@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -48,13 +48,10 @@ export class UserService implements IUserService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
-      const savedUser = await this.entityManager.getRepository(UserEntity)
-      savedUser.save(newUser)
-      return newUser; 
+      const savedUser = await this.entityManager.getRepository(UserEntity).save(newUser)
+      return savedUser; 
     }
   }
-
-  findForFine(id: string) {}
 
   async findAll() {
     const listUsers = await this.userRepository.find()
@@ -100,7 +97,6 @@ export class UserService implements IUserService {
       user.name = updateUserDto.name;
     }
    
-
     const errors = await validate(user);
     if (errors.length > 0){
       const _errors = { checkUser: 'User is not valid'};
@@ -127,12 +123,6 @@ export class UserService implements IUserService {
     return true;
   }
 
-  //auth(username: string, password: string) {
-    // PASSAPORT.JS
-  //  return 'logado';
-  //}
-
-  /*ADMINISTRADOR*/
   async setToAdmin(id: string) {
     const user = await this.userRepository.findOneBy({id});
 

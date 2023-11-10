@@ -1,13 +1,12 @@
 import {
   Column,
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuidV4 } from 'uuid';
 
 @Entity('user')
 export class UserEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column({ length: 50 })
   name: string;
@@ -29,9 +28,5 @@ export class UserEntity {
 
   @Column({ type: 'jsonb', array: true, nullable: true })
   idFavorites: string[];
-  constructor() {
-    if (!this.id) {
-      this.id = uuidV4();
-    }
-  }
+
 }

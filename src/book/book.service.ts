@@ -3,17 +3,20 @@ import { IBookService } from './interfaces/bookService.interface';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookEntity } from './entities/book.entity';
-import { Repository, ArrayOperator } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
-import { GenreService } from '../genre/genre.service';
+import { BookGenres } from './entities/bookGenres.entity';
+
 
 @Injectable()
 export class BookService implements IBookService {
   constructor(
     @InjectRepository(BookEntity)
-    private readonly bookRepository: Repository<BookEntity>
+    private readonly bookRepository: Repository<BookEntity>,
+    @InjectRepository(BookGenres)
+    private readonly bookGenresRepository:Repository<BookGenres>
   ){
 
   }

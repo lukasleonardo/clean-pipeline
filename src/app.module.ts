@@ -6,6 +6,8 @@ import { BookModule } from './book/book.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { RentalsModule } from './rentals/rentals.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -15,7 +17,8 @@ import { RentalsModule } from './rentals/rentals.module';
     BookModule,
     DatabaseModule,
     RentalsModule,
-
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
