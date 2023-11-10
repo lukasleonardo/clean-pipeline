@@ -25,4 +25,9 @@ export class RentalsService {
   }
 
   findForFine(id: string) {}
+
+  
+  retrieveAllFines() {
+    return 'Retorna usuarios multados';
+  }
 }

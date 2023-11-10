@@ -85,17 +85,6 @@ describe('GenreController', () => {
   })
 
 
-
-    // it('Deve retornar um erro se o gênero já existe', async () => {
-    //   const mockGenreEntity: CreateGenreDto = {  name: 'Drama'}
-    //   const mockRepository = MockRepository<GenreEntity>()
-
-    //   when(mockRepository.findOne(deepEqual({ name: 'Drama' }))).thenReject(new Error());
-      
-    //   await expect(genreController.create(mock)).rejects.toThrow()
-    // });
-
-
  });
 
 

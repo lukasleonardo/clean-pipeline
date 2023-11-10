@@ -18,17 +18,15 @@ export class UserService implements IUserService {
     private readonly entityManager: EntityManager,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { name, login, password, province, cpf, fines, isAdmin, state, idFavorites } = createUserDto;
+    const { name, login, password, province, cpf, state } = createUserDto;
     const newUser = new UserEntity()
     newUser.name = name
     newUser.login = login
     newUser.password = bcrypt.hashSync(password, 8)
     newUser.province = province
     newUser.cpf = cpf
-    newUser.fines = fines
-    newUser.isAdmin = isAdmin
     newUser.state = state
-    newUser.idFavorites = idFavorites
+  
 
     const checCpf = await this.userRepository.findOneBy({cpf:cpf})
     const checkUser = await this.userRepository.findOneBy({login:login})
@@ -123,6 +121,7 @@ export class UserService implements IUserService {
     return true;
   }
 
+  // fazer o rota marcar usuario
   async setToAdmin(id: string) {
     const user = await this.userRepository.findOneBy({id});
 
@@ -141,16 +140,11 @@ export class UserService implements IUserService {
   }
 
 
-  // daqui pra baixo e tudo duvida!
-  retrieveAllFines(ChargedUsers: Array<UserEntity>) {
-    return 'Retorna usuarios multados';
-  }
-
-  borrowedBooks(borrowedbooks: Array<BookEntity>) {
+  borrowedBooks(borrowedbooks: BookEntity[]) {
     return 'retorna todos os livros emprestado';
   }
 
-  //*LIVROS */
+  //*LIVROS *//
 
   bookmarkBook(bookId: string) {
     return 'adciona livro dos favoritos';
@@ -159,10 +153,12 @@ export class UserService implements IUserService {
   removeBookmarkBook(bookId: string) {
     return 'remove livro dos favoritos';
   }
-  // como mostrar array no bagulho //  tip LIST>
-  findAllBookmarked(...bookId: BookEntity[]) {}
+  
+  findAllBookmarked(bookId: BookEntity[]) {
+    return'retorna todos os livros'
+  }
 
-  // recebe um livro ou um id
+
   requestBook(bookId: string) {
     return 'solicita livro para empréstimo';
   }
