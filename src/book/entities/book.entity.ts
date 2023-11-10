@@ -6,15 +6,12 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  PrimaryColumn,
   Timestamp,
   PrimaryGeneratedColumn,
-  OneToMany,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
 import { UserEntity } from '../../user/entities/user.entity';
-import { v4 as uuidV4 } from 'uuid';
 
 
 @Entity('book')
@@ -33,12 +30,12 @@ export class BookEntity implements IBook {
   @Column({ type:'varchar', default: 'DISPONIVEL' })
   state: string;
 
-  @ManyToMany(type => GenreEntity,{cascade:true})
+  @ManyToMany(type => GenreEntity,{cascade:true, eager: true})
   @JoinTable({
-    name: 'book_genres',
+    name: 'book_genres', 
     joinColumn: {
       name: 'book_id',
-      referencedColumnName: 'id',
+      referencedColumnName: 'id',    
     },
     inverseJoinColumn: {
       name: 'genres_id',

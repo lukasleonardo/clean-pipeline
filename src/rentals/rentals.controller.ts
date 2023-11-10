@@ -40,4 +40,8 @@ export class RentalsController {
     return 'Retorna usuarios multados';
   }
 
+  @Post('fine/:id')
+  applyFine(@Param('id') id: string) {
+    return 'taxa por atraso na devolução';
+  }
 }

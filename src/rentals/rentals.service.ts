@@ -30,4 +30,9 @@ export class RentalsService {
   retrieveAllFines() {
     return 'Retorna usuarios multados';
   }
+
+    // definir regra de negocio!!!
+  applyFine(id: string) {
+    return 'taxa por atraso na devolução';
+  }
 }
