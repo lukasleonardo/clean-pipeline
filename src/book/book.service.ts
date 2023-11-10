@@ -7,7 +7,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
-import { BookGenres } from './entities/bookGenres.entity';
+import { GenreEntity } from '../genre/entities/genre.entity';
+
 
 
 @Injectable()
@@ -15,8 +16,8 @@ export class BookService implements IBookService {
   constructor(
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
-    @InjectRepository(BookGenres)
-    private readonly bookGenresRepository:Repository<BookGenres>
+    @InjectRepository(GenreEntity)
+    private readonly genreRepository: Repository<GenreEntity>
   ){
 
   }
@@ -76,26 +77,27 @@ export class BookService implements IBookService {
     return book;
   }
 
-  async findByGenre(genreName: string) {
-    //Relações não funcionam
-    const book = this.bookRepository.find(
+  async findByGenre(genreid: string) {
+  
+     const books = this.bookRepository.find(
+       {
+         where:{
+           genreList:{
+             id:genreid
+           }
+         }
+       }
+     ).then(books=>
       {
-        where:{
-          genreList:{
-            name:genreName
-          }
+        if(books.length===0){
+          return new HttpException('No books found with this genre', HttpStatus.NOT_FOUND)
         }
-      }
-    )
-
-    if(!book){
-      throw new HttpException(
-        { message: 'No book found with this id' },
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return book;
-  }
+      }).catch(()=>{
+      throw new HttpException('invalid input data at id', HttpStatus.BAD_REQUEST)
+    })
+    
+   return books;
+ }
 
   async update(id: string, updateBookDto: UpdateBookDto):Promise<BookEntity> {
     const {name, description, author, value, genres} = updateBookDto
@@ -142,10 +144,7 @@ export class BookService implements IBookService {
       );
     };
   }
-  // definir regra de negocio!!!
-  applyFine(id: string) {
-    return 'taxa por atraso na devolução';
-  }
+
 
   async setBookState(id: string) {
     const book = await this.bookRepository.findOneBy({ id });
@@ -164,6 +163,45 @@ export class BookService implements IBookService {
     await this.bookRepository.save(book)
     return book;
 
-    return 'Altera o status do livro';
   }
+
+async addGenreToBook(bookid:string, genreid:GenreEntity){
+  try {
+    const book = await this.bookRepository.findOneBy( {id:bookid} )
+    
+    if(book){
+      const genre = await this.genreRepository.findOneBy({id:genreid.id})
+      const genreExists = book.genreList.some((genre) => genre.id === genreid.id );
+      if(!genreExists && genre != null){
+        book.genreList.push(genre)
+        return await this.bookRepository.save(book)
+      }
+      
+    }else{
+      throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+   } 
+  } catch (error) {
+      throw new HttpException('invalid input data', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+    
+async removeGenreFromBook(bookid: string, genreid: GenreEntity) {
+      
+      try {
+        const book = await this.bookRepository.findOneBy( {id:bookid} )
+
+        if (book) {
+          // Filtra o array para remover o gênero com o ID fornecido
+          book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);
+          
+          return await this.bookRepository.save(book) 
+          
+        } else {
+          throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+        }
+      } catch (error) {
+        throw new HttpException('Attempt to remove book genre failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+  }
+
 }

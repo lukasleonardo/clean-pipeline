@@ -10,6 +10,7 @@ import {
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
+import { GenreEntity } from '../genre/entities/genre.entity';
 
 
 @Controller('book')
@@ -32,8 +33,8 @@ export class BookController {
   }
 
   @Get('genre/:id')
-  findByGenre(@Param('') genreId: number) {
-    return `This action returns a #${genreId} book`;
+  findByGenre(@Param('id') genreid: string) {
+    return this.bookService.findByGenre(genreid);
   }
 
   @Put(':id')
@@ -46,13 +47,19 @@ export class BookController {
     return this.bookService.remove(id);
   }
 
-  @Post('fine/:id')
-  applyFine(@Param('id') id: string) {
-    return 'taxa por atraso na devolução';
-  }
-
   @Post('set/:id')
   setBookState(@Param('id') id: string) {
     return this.bookService.setBookState(id);
   }
+
+  @Post('genre/:id') 
+  addGenreToBook(@Param('id') bookid:string, @Body() genreid:GenreEntity){
+    return this.bookService.addGenreToBook(bookid,genreid)
+  }
+
+  @Delete('genre/:id')
+  removeGenreFromBook(@Param('id') bookid:string, @Body() genreid:GenreEntity){
+    return this.bookService.removeGenreFromBook(bookid,genreid)
+  }
+
 }
