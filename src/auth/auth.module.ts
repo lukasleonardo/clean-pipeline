@@ -4,9 +4,10 @@ import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt'
+import { forwardRef } from '@nestjs/common';
 
 @Module({
-  imports: [UserModule, PassportModule,
+  imports: [forwardRef(() => UserModule), PassportModule,
   JwtModule.register({
     secret:jwtConstants.secret,
     signOptions: { expiresIn: '60s'},

@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -35,7 +36,8 @@ export class UserController {
 
   @Get('fine/:id')
   findForFine(@Param('id') id: string) {}
-
+  
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.userService.findAll();
