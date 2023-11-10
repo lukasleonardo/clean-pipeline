@@ -8,6 +8,7 @@ import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { Role } from '../shared/global.enum';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -143,7 +144,7 @@ export class UserService implements IUserService {
       );
     }
    
-    user.isAdmin = roles.admin;
+    user.isAdmin = Role.admin;
     
     const savedUser = await this.userRepository.save(user);
     return savedUser;

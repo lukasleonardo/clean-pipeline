@@ -13,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateToken(): Promise<any> {
+  async validateToken(access_token): Promise<any> {
     //receber no parametro;
     //decode do token;
     //verificar se o token expirado;

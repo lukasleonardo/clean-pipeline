@@ -39,8 +39,8 @@ export class BookEntity implements IBook {
   })
   genre: GenreEntity[];
 
-  // administrador que cadastrou o livro
-  @OneToOne(type => UserEntity)
+   //administrador que cadastrou o livro
+  //@OneToOne(type => UserEntity)
   @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
 
