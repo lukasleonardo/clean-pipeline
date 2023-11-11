@@ -7,24 +7,34 @@ import {
   Delete,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
+import { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('book')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookService,
+    private readonly authService: AuthService) {}
 
   @Post()
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.bookService.create(createBookDto);
+  create(@Body() createBookDto: CreateBookDto, @Req() request: Request) {
+      const decodeTk = this.authService.verifyToken(request)
+    const {username} = decodeTk
+    return this.bookService.create(createBookDto, username);
   }
 
   @Get()
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }

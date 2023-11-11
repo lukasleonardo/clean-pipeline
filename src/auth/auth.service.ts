@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import moment = require('moment');
 import { JsonWebKey } from 'crypto';
 import { UserEntity } from '../user/entities/user.entity';
-import * as bcrypt from 'bcrypt'
 import { jwtConstants } from './constants';
+import * as bcrypt from 'bcrypt'
+import moment = require('moment');
+import { Request } from 'express';
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+
   ) {}
 
 
@@ -35,8 +37,8 @@ export class AuthService {
   }
 
 
-  verifyToken(token: string): any {
-    console.log(token)
+  verifyToken(request: Request): any {
+    const token = request.headers.authorization?.split(' ')[1];
     return this.jwtService.verify(token, jwtConstants);
   }
 

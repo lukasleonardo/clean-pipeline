@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IBookService } from './interfaces/bookService.interface';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
 import { GenreEntity } from '../genre/entities/genre.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class BookService implements IBookService {
@@ -15,13 +16,16 @@ export class BookService implements IBookService {
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
     @InjectRepository(GenreEntity)
-    private readonly genreRepository: Repository<GenreEntity>
+    private readonly genreRepository: Repository<GenreEntity>,
+    private readonly userService: UserService
   ){
 
   }
-  async create(createBookDto: CreateBookDto):Promise<BookEntity> {
+  async create(createBookDto: CreateBookDto, username: string):Promise<BookEntity> {
 
     const {name, description, author, value, genres} = createBookDto
+
+
     const book = await this.bookRepository.findOneBy({ name: name });
     if(book){
       const error = { book: 'book already exists in table book' };
@@ -30,14 +34,14 @@ export class BookService implements IBookService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    const admin = await this.userService.findOne(username)
     const newBook = new BookEntity();
     newBook.name=name;
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
     newBook.genreList = genres;
-    
+    newBook.createdBy = admin
 
     const errors = await validate(newBook);
     if (errors.length > 0) {

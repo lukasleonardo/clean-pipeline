@@ -13,5 +13,4 @@ export class CreateBookDto {
   value: number;
 
   genres:GenreEntity[]
-
 }
