@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -13,13 +15,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
-import { ILoginData } from './interfaces/user.interface';
+import { AuthGuard } from '@nestjs/passport';
+
 
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService,
-    private authService: AuthService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService
+    ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -27,8 +32,8 @@ export class UserController {
   }
 
   @Post('login')
-  async login(@Body() loginData: ILoginData){
-    return this.authService.login(loginData);
+  async login(@Body() user: UserEntity){
+    return this.authService.login(user);
   }
 
 
@@ -78,5 +83,10 @@ export class UserController {
   @Post('request/:id')
   requestBook(@Param('id') bookId: string) {
     return 'solicita livro para empréstimo';
+  }
+
+  @Get('user')
+  async user(@Request() req): Promise<any> {
+    return req.user;
   }
 }

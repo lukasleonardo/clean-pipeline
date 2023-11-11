@@ -7,7 +7,7 @@ export class CreateUserDto {
   //@IsNotEmpty()
   readonly cpf: string;
   //@IsNotEmpty()
-  readonly login: string;
+  readonly username: string;
   //@IsNotEmpty()
   readonly password: string;
   //@IsNotEmpty()

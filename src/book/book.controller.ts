@@ -6,11 +6,15 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { GenreEntity } from '../genre/entities/genre.entity';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 
 @Controller('book')
@@ -23,11 +27,14 @@ export class BookController {
   }
 
   @Get()
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.bookService.findOne(id);
   }
