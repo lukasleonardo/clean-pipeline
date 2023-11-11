@@ -57,9 +57,8 @@ export class UserController {
   }
 
   @Post('set/admin/:id')
-  // @UseGuards(RolesGuard)
-  // @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   setToAdmin(@Param('id') id: string) {
     
     return this.userService.setToAdmin(id);

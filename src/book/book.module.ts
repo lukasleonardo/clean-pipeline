@@ -10,8 +10,6 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoggerMiddleware } from '../auth/logger.middleware';
 
-
-
 @Module({
   imports: [TypeOrmModule.forFeature([BookEntity,UserEntity,GenreEntity])],
   controllers: [BookController],
