@@ -12,12 +12,9 @@ import { BookService } from './book.service';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { GenreEntity } from '../genre/entities/genre.entity';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/guards/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
-import { Role } from '../shared/global.enum';
 
-
+@UseGuards(JwtAuthGuard)
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
@@ -33,7 +30,6 @@ export class BookController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.bookService.findOne(id);
   }

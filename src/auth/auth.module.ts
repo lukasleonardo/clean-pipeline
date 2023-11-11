@@ -13,7 +13,7 @@ import { JwtStrategy } from './jwt/jwt.strategy';
     forwardRef(() => UserModule), 
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s'},
+      signOptions: { expiresIn: '1h'},
     })],
   providers: [AuthService, JwtStrategy],
   exports: [JwtModule, AuthService]

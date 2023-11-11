@@ -5,6 +5,7 @@ import moment = require('moment');
 import { JsonWebKey } from 'crypto';
 import { UserEntity } from '../user/entities/user.entity';
 import * as bcrypt from 'bcrypt'
+import { jwtConstants } from './constants';
 
 
 @Injectable()
@@ -25,14 +26,21 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const expireIn = moment().local().add(60, 'seconds');
-    const payload = { username: signedUser.username, sub: signedUser.id, expireIn };
+    const expireIn = moment().local().add(3600, 'seconds');
+    const payload = { username: signedUser.username, sub: signedUser.id, role:signedUser.isAdmin  , expireIn };
     return {
-      id:signedUser.id,
       access_token: this.jwtService.sign(payload)
     };
    
   }
+
+
+  verifyToken(token: string): any {
+    console.log(token)
+    return this.jwtService.verify(token, jwtConstants);
+  }
+
+  
 }
 
 //bcrypt.compare(password, signedUser.password)

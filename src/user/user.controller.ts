@@ -7,7 +7,6 @@ import {
   Delete,
   Put,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +16,7 @@ import { UserEntity } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/guards/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -57,9 +57,11 @@ export class UserController {
   }
 
   @Post('set/admin/:id')
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
+  // @UseGuards(RolesGuard)
+  // @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard)
   setToAdmin(@Param('id') id: string) {
+    
     return this.userService.setToAdmin(id);
   }
 

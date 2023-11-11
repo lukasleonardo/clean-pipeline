@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { BookService } from './book.service';
 import { BookController } from './book.controller';
 import { BookEntity } from './entities/book.entity';
@@ -8,6 +8,7 @@ import { GenreEntity } from '../genre/entities/genre.entity';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { LoggerMiddleware } from '../auth/logger.middleware';
 
 
 
@@ -16,4 +17,10 @@ import { JwtService } from '@nestjs/jwt';
   controllers: [BookController],
   providers: [BookService, AuthService, UserService, JwtService],
 })
-export class BookModule {}
+export class BookModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('book');
+  }
+}
