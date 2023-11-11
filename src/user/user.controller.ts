@@ -15,9 +15,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
-import { AuthGuard } from '@nestjs/passport';
-
-
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -58,6 +57,8 @@ export class UserController {
   }
 
   @Post('set/admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   setToAdmin(@Param('id') id: string) {
     return this.userService.setToAdmin(id);
   }
@@ -85,8 +86,4 @@ export class UserController {
     return 'solicita livro para empréstimo';
   }
 
-  @Get('user')
-  async user(@Request() req): Promise<any> {
-    return req.user;
-  }
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +9,8 @@ import { IUserService } from './interfaces/userService.interface';
 import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -118,8 +120,8 @@ export class UserService implements IUserService {
     await this.userRepository.remove(user);
     return true;
   }
-
-  // fazer o rota marcar usuario
+  
+ 
   async setToAdmin(id: string) {
     const user = await this.userRepository.findOneBy({id});
 

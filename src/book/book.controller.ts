@@ -15,6 +15,7 @@ import { GenreEntity } from '../genre/entities/genre.entity';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/guards/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { Role } from '../shared/global.enum';
 
 
 @Controller('book')
@@ -27,8 +28,6 @@ export class BookController {
   }
 
   @Get()
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }

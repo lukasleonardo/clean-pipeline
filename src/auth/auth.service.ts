@@ -18,8 +18,7 @@ export class AuthService {
   async login(user: UserEntity): Promise<JsonWebKey> {
     const { username, password } = user;
     const signedUser = await this.userService.findOne(username)
-    console.log(signedUser.password)
-    console.log(user.password)
+
     if (!bcrypt.compareSync(password, signedUser.password)) {
       throw new HttpException(
         { message: 'Login or Password incorrect!' },
