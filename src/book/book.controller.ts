@@ -27,7 +27,7 @@ export class BookController {
 
   @Post()
   create(@Body() createBookDto: CreateBookDto, @Req() request: Request) {
-      const decodeTk = this.authService.verifyToken(request)
+    const decodeTk = this.authService.verifyToken(request)
     const {username} = decodeTk
     return this.bookService.create(createBookDto, username);
   }

@@ -15,7 +15,7 @@ export class RolesGuard implements CanActivate {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     const request = context.switchToHttp().getRequest();
     const data = this.authService.verifyToken(request)
-    console.log(data)
+    
     if (data.username) {
       const user = await this.userService.findOne(data.username);
       return roles.includes(user.isAdmin);
