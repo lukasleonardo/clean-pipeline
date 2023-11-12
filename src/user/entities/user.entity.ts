@@ -25,7 +25,7 @@ export class UserEntity {
   isAdmin: string;
   @Column({ default: 'DISPONIVEL' })
   state: string;
-
+  // mudar
   @Column({ type: 'jsonb', array: true, nullable: true })
   idFavorites: string[];
 

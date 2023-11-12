@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   Timestamp,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
@@ -45,7 +46,7 @@ export class BookEntity implements IBook {
   genreList: GenreEntity[];
 
   // // administrador que cadastrou o livro
-  @OneToOne(() => UserEntity, {eager:true})
+  @ManyToOne(() => UserEntity, {eager:true})
   @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
 

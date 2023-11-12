@@ -42,7 +42,7 @@ export class BookService implements IBookService {
     newBook.author=author;
     newBook.value=value;
     newBook.genreList = genres;
-    //newBook.createdBy = admin;
+    newBook.createdBy = admin;
     
     const errors = await validate(newBook);
     if (errors.length > 0) {

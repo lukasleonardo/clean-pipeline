@@ -36,6 +36,8 @@ export class BookController {
   }
 
   @Get()
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }
