@@ -30,7 +30,7 @@ export class UserEntity {
   state: string;
 
   // Coragem para mudar!
-  @ManyToMany(type => BookEntity,{ eager: true})
+  @ManyToMany(type => BookEntity, {eager:true})
   @JoinTable({
     name: 'bookmarks', 
     joinColumn: {
@@ -42,6 +42,6 @@ export class UserEntity {
       referencedColumnName: 'id', 
     }
   })
-  idFavorites: BookEntity[];
+  favoriteBooks: BookEntity[];
 
 }
