@@ -12,6 +12,5 @@ export class CreateUserDto {
   readonly password: string;
   //@IsNotEmpty()
   readonly province: string;
-  readonly state: string;
 
 }

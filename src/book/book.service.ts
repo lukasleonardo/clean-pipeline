@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { objectState } from '../shared/global.enum';
 import { GenreEntity } from '../genre/entities/genre.entity';
-import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class BookService implements IBookService {
@@ -17,7 +17,8 @@ export class BookService implements IBookService {
     private readonly bookRepository: Repository<BookEntity>,
     @InjectRepository(GenreEntity)
     private readonly genreRepository: Repository<GenreEntity>,
-    private readonly userService: UserService
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>
   ){
 
   }
@@ -34,15 +35,15 @@ export class BookService implements IBookService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const admin = await this.userService.findOne(username)
+    const admin = await this.userRepository.findOneBy({username: username})
     const newBook = new BookEntity();
     newBook.name=name;
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
     newBook.genreList = genres;
-    newBook.createdBy = admin
-
+    //newBook.createdBy = admin;
+    
     const errors = await validate(newBook);
     if (errors.length > 0) {
       const errors = { book: 'book input is not valid.' };
@@ -79,30 +80,31 @@ export class BookService implements IBookService {
     return book;
   }
 
-  async findByGenre(genreid: string) {
-  
-     const books = this.bookRepository.find(
-       {
-         where:{
-           genreList:{
-             id:genreid
-           }
-         }
-       }
-     ).then(books=>
-      {
-        if(books.length===0){
-          return new HttpException('No books found with this genre', HttpStatus.NOT_FOUND)
-        }
-      }).catch(()=>{
-      throw new HttpException('invalid input data at id', HttpStatus.BAD_REQUEST)
-    })
-    
-   return books;
- }
+  async findByGenre(genreId: string) {
+    try {
+      const books = await this.bookRepository.find({
+        where: {
+          genreList: {
+            id: genreId,
+          },
+        },
+      });
+
+      if (books.length === 0) {
+        throw new HttpException('No books found with this genre', HttpStatus.NOT_FOUND);
+      }
+
+      return books;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Invalid input data at id', HttpStatus.BAD_REQUEST);
+    }
+  }
 
   async update(id: string, updateBookDto: UpdateBookDto):Promise<BookEntity> {
-    const {name, description, author, value, genres} = updateBookDto
+    const {name, description, author, value} = updateBookDto
     const newBook = await this.bookRepository.findOneBy({id});
     if(!newBook){
       const error = { book: 'book does not exists' };
@@ -115,7 +117,7 @@ export class BookService implements IBookService {
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
-    newBook.genreList = genres
+
 
     const errors = await validate(newBook);
     if (errors.length > 0) {

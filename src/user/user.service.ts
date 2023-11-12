@@ -62,6 +62,8 @@ export class UserService implements IUserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    const { name, username, password, province, cpf } = updateUserDto;
+
     const user = await this.userRepository.findOneBy({id});
     if(!user){
       const error = {user: 'user not found'};
@@ -71,29 +73,18 @@ export class UserService implements IUserService {
       );
     }
 
-    if(updateUserDto.name){
-      user.name = updateUserDto.name;
-    }
-    if(user.username == updateUserDto.username){
+    if(user.username == username){
       const error = {user: 'login already exists'};
       throw new HttpException(
         {message: 'Input data validation failed', error },
         HttpStatus.NOT_FOUND,
       );
     }
-      else{
-        user.username = updateUserDto.username;
-      }
-    
-    if(updateUserDto.password){
-      user.password = updateUserDto.password;
-    }
-    if(updateUserDto.province){
-      user.province = updateUserDto.province;
-    }
-    if(updateUserDto.name){
       user.name = updateUserDto.name;
-    }
+      user.username = username;
+      user.password = bcrypt.hashSync(password, 8);
+      user.province = updateUserDto.province;
+
    
     const errors = await validate(user);
     if (errors.length > 0){
@@ -118,7 +109,11 @@ export class UserService implements IUserService {
       );
     }
     await this.userRepository.remove(user);
-    return true;
+    const status = {
+      message: 'Item removed successfully',
+      status: HttpStatus.OK,
+    };
+    return status;
   }
   
  
