@@ -21,7 +21,7 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const data = this.authService.verifyToken(request);
-    console.log(data)
+  
 
     if (data.username) {
       const user = await this.userService.findOne(data.username);
@@ -31,8 +31,7 @@ export class RolesGuard implements CanActivate {
       }
 
       // Verifique se algum dos papéis do usuário está incluído nos papéis permitidos
-      console.log(roles);
-      console.log(user.isAdmin)
+
 
       return roles.some((role) => user.isAdmin.includes(role));
     }

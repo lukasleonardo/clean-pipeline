@@ -12,13 +12,9 @@ export class UpdateRequestMiddleware implements NestMiddleware {
     private userService: UserService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    // Atualize a requisição com dados mais recentes, se necessário
     const data = this.authService.verifyToken(req);
-    console.log(data)
     if (data.username) {
-      // Atualize a requisição com informações do usuário, se disponíveis
       req.user = await this.userService.findOne(data.username);
-      console.log(req.user)
     }
 
     next();
