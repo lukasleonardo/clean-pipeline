@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt'
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt/jwt.strategy';
+import { RolesGuard } from './guards/roles.guard';
 
 
 @Module({

@@ -35,7 +35,6 @@ export class UserController {
     return this.authService.login(user);
   }
 
-
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -57,11 +56,10 @@ export class UserController {
   }
 
   @Post('set/admin/:id')
-  // @UseGuards(RolesGuard)
-  // @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   @UseGuards(JwtAuthGuard)
-  setToAdmin(@Param('id') id: string) {
-    
+  setToAdmin(@Param('id') id: string) {    
     return this.userService.setToAdmin(id);
   }
 

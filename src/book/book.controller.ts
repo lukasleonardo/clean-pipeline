@@ -19,13 +19,16 @@ import { Roles } from '../auth/guards/roles.decorator';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
+
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService,
     private readonly authService: AuthService) {}
 
   @Post()
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN')
   create(@Body() createBookDto: CreateBookDto, @Req() request: Request) {
     const decodeTk = this.authService.verifyToken(request)
     const {username} = decodeTk
@@ -33,8 +36,6 @@ export class BookController {
   }
 
   @Get()
-  @UseGuards(RolesGuard)
-  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }
@@ -60,6 +61,8 @@ export class BookController {
   }
 
   @Post('set/:id')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   setBookState(@Param('id') id: string) {
     return this.bookService.setBookState(id);
   }

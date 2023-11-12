@@ -80,11 +80,11 @@ export class UserService implements IUserService {
         HttpStatus.NOT_FOUND,
       );
     }
-      user.name = updateUserDto.name;
+      user.name = name;
       user.username = username;
       user.password = bcrypt.hashSync(password, 8);
-      user.province = updateUserDto.province;
-
+      user.province = province;
+      user.cpf = cpf 
    
     const errors = await validate(user);
     if (errors.length > 0){

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GenreModule } from './genre/genre.module';
@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RentalsModule } from './rentals/rentals.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { UpdateRequestMiddleware } from './auth/auth.middleware';
 
 
 @Module({
@@ -22,4 +23,6 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+
+}
