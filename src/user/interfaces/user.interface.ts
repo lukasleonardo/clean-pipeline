@@ -10,7 +10,7 @@ export interface IUser {
   fines: number;
   state: string;
   isAdmin: string;
-  idFavoritos: BookEntity[];
+  favoriteBooks: BookEntity[];
 }
 
 export interface ILoginData {

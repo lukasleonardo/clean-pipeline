@@ -69,17 +69,19 @@ export class UserController {
   }
 
   @Post('bookmark/:id')
-  bookmarkBook(@Param('id') bookId: string) {
-    return 'adciona livro dos favoritos';
+  bookmarkBook(@Param('id') userid:string, @Body() book:BookEntity) {
+    return this.userService.bookmarkBook(userid, book);
   }
 
   @Delete('bookmark/:id')
-  removeBookmarkBook(@Param('id') bookId: string) {
-    return 'remove livro dos favoritos';
+  removeBookmarkBook(@Param('id') userid:string, @Body() book:BookEntity) {
+    return this.userService.removeBookmarkBook(userid, book);
   }
 
-  @Get('bookmark')
-  findAllBookmarked(bookId: BookEntity[]) {}
+  @Get('bookmark/:id')
+  findAllBookmarked(@Param('id') userid: string) {
+    return this.userService.findAllBookmarked(userid);
+  }
 
   @Post('request/:id')
   requestBook(@Param('id') bookId: string) {

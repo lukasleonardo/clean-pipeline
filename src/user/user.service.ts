@@ -17,6 +17,8 @@ export class UserService implements IUserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { name, username, password, province, cpf } = createUserDto;
@@ -141,16 +143,49 @@ export class UserService implements IUserService {
 
   //*LIVROS *//
 
-  bookmarkBook(bookId: string) {
-    return 'adciona livro dos favoritos';
+  async bookmarkBook(userId: string, bookEntity: BookEntity) {
+    console.log(userId)
+    console.log(bookEntity)
+    try{
+      const user = await this.userRepository.findOneBy( {id: userId} )
+      if (user){
+        const book = await this.bookRepository.findOneBy({id:bookEntity.id})
+        const bookExists = user.favoriteBooks.some((user) => user.id === bookEntity.id );
+        if(!bookExists && book != null){
+          
+          console.log(user)
+          console.log(book)
+          user.favoriteBooks.push(book)
+          return await this.userRepository.save(user)
+        }
+      }else{
+        throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+    } 
+  } catch (error) {
+      throw new HttpException('invalid input data', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  removeBookmarkBook(bookId: string) {
-    return 'remove livro dos favoritos';
+  async removeBookmarkBook(userId:string, book: BookEntity) {
+    
+    try {
+      const user = await this.userRepository.findOneBy( {id:userId} )
+      if (user) {
+        user.favoriteBooks = user.favoriteBooks.filter((favoriteBooks) => favoriteBooks.id !== book.id);
+        return await this.userRepository.save(user) 
+
+      } else {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException('Attempt to remove book from favorites failed', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   
-  findAllBookmarked(bookId: BookEntity[]) {
-    return'retorna todos os livros'
+  async findAllBookmarked(userid: string) {
+    const listUsers = await this.userRepository.findOneBy({id: userid});
+    return listUsers.favoriteBooks;
+    
   }
 
 

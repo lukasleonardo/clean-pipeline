@@ -46,7 +46,7 @@ export class BookEntity implements IBook {
   genreList: GenreEntity[];
 
   // // administrador que cadastrou o livro
-  @ManyToOne(() => UserEntity, {eager:true})
+  @ManyToOne(() => UserEntity,)
   @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
 
