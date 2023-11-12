@@ -1,13 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookEntity } from '../book/entities/book.entity';
 import { RentalEntity } from './entities/rental.entity';
-import { objectState } from '../shared/global.enum';
-import { now } from 'moment';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()
@@ -60,27 +56,26 @@ export class RentalsService {
 
   
 
-  // // definir regra de negocio!!!
-  // async applyFines() {
-  //  try{
-  //   const rentals = await this.rentalRepository.find()
-  //   const currentDate = new Date();
+  // definir regra de negocio!!!
+  async applyFines() {
+   try{
+    const rentals = await this.rentalRepository.find()
+    const currentDate = new Date();
 
-  //   rentals.forEach( async (rental) => {
-  //    if(rental.expiratedLoanDate && rental.expiratedLoanDate < currentDate){
-  //     const daysDifference = differenceInDays(currentDate, rental.expiratedLoanDate);
-  //     const multa = daysDifference * 5;
-  //     typeof(rental.fines) 
-  //     console.log(rental.fines)
-  //     await this.rentalRepository.save(rental)
-  //    }
-  //   }
-  //   )
-  //     }catch{
-  //         throw new HttpException('Failed to apply fines', HttpStatus.INTERNAL_SERVER_ERROR)
-  //      }
-  // }
-  //
+    rentals.forEach( async (rental) => {
+     if(rental.expiratedLoanDate && rental.expiratedLoanDate < currentDate){ 
+      const daysDifference = differenceInDays(currentDate, rental.expiratedLoanDate);
+      const multa = daysDifference * 5;
+      rental.fines = multa
+      await this.rentalRepository.save(rental)
+     }
+    }
+    )
+      }catch{
+          throw new HttpException('Failed to apply fines', HttpStatus.INTERNAL_SERVER_ERROR)
+       }
+  }
+  async applyPenalty() {}
 
   async remove(id: string){
     try{

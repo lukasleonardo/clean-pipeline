@@ -1,7 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { RentalsService } from './rentals.service';
-import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
 import { BookEntity } from '../book/entities/book.entity';
 
 @Controller('rentals')
@@ -30,8 +28,8 @@ export class RentalsController {
   }
 
 
-  // @Get('fines')
-  // applyFines() {
-  //   return this.rentalsService.applyFines();
-  // }
+  @Post()
+  applyFines() {
+    return this.rentalsService.applyFines();
+  }
 }
