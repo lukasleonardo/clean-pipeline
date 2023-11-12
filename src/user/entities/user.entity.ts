@@ -1,8 +1,11 @@
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BookEntity } from '../../book/entities/book.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -25,8 +28,20 @@ export class UserEntity {
   isAdmin: string;
   @Column({ default: 'DISPONIVEL' })
   state: string;
-  // mudar
-  @Column({ type: 'jsonb', array: true, nullable: true })
-  idFavorites: string[];
+
+  // Coragem para mudar!
+  @ManyToMany(type => BookEntity,{ eager: true})
+  @JoinTable({
+    name: 'bookmarks', 
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',     
+    },
+    inverseJoinColumn: {
+      name: 'book_id',
+      referencedColumnName: 'id', 
+    }
+  })
+  idFavorites: BookEntity[];
 
 }
