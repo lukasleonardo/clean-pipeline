@@ -21,8 +21,7 @@ export class UserEntity {
   province: string;
   @Column()
   cpf: string;
-  @Column('double precision', { default: 0})
-  fines: number;
+
 
   @Column({ default: 'USER' })
   isAdmin: string;

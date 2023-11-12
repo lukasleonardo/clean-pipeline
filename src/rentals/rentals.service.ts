@@ -1,38 +1,104 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
 import { UpdateRentalDto } from './dto/update-rental.dto';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../user/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BookEntity } from '../book/entities/book.entity';
+import { RentalEntity } from './entities/rental.entity';
+import { objectState } from '../shared/global.enum';
+import { now } from 'moment';
+import { differenceInDays } from 'date-fns';
 
 @Injectable()
 export class RentalsService {
-  create(createRentalDto: CreateRentalDto) {
-    return 'This action adds a new rental';
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository:Repository<UserEntity>,
+    @InjectRepository(BookEntity)
+    private readonly bookRepository:Repository<BookEntity>,
+    @InjectRepository(RentalEntity)
+    private readonly rentalRepository:Repository<RentalEntity>
+  ){}
+
+  async requestBook(userid:string, bookEntity: BookEntity) {
+    try{
+      const user = await this.userRepository.findOneBy({id:userid})
+      const rentals = await this.rentalRepository.find({where:{user:{id:userid}}})
+      const book = await this.bookRepository.findOneBy({id:bookEntity.id})
+      if(user && rentals.length<5 && book){
+          const newRental = new RentalEntity()
+          newRental.user = user
+          newRental.book= book
+          newRental.loanDate = new Date();
+          newRental.expiratedLoanDate = new Date();
+          newRental.expiratedLoanDate.setDate(newRental.loanDate.getDate() + 15)
+
+          const newEntry = await this.rentalRepository.save(newRental)
+          return newEntry
+      }else{
+        throw new HttpException('Request for book Failed', HttpStatus.BAD_REQUEST)
+      }
+    }catch(e){
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 
-  findAll() {
-    return `This action returns all rentals`;
+  async retrieveAllFines() {
+    const rentals = await this.rentalRepository.find()
+    return rentals;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rental`;
-  }
+  async findAllFromUser(userid: string) {
+    const userRentals = await this.userRepository.findOneBy({id:userid})
+    if(userRentals){
+      const rentals = await this.rentalRepository.find({where:{user:{id:userRentals.id}}})
+      return rentals
+    }
 
-  update(id: number, updateRentalDto: UpdateRentalDto) {
-    return `This action updates a #${id} rental`;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} rental`;
-  }
-
-  findForFine(id: string) {}
 
   
-  retrieveAllFines() {
-    return 'Retorna usuarios multados';
-  }
 
-    // definir regra de negocio!!!
-  applyFine(id: string) {
-    return 'taxa por atraso na devolução';
+  // // definir regra de negocio!!!
+  // async applyFines() {
+  //  try{
+  //   const rentals = await this.rentalRepository.find()
+  //   const currentDate = new Date();
+
+  //   rentals.forEach( async (rental) => {
+  //    if(rental.expiratedLoanDate && rental.expiratedLoanDate < currentDate){
+  //     const daysDifference = differenceInDays(currentDate, rental.expiratedLoanDate);
+  //     const multa = daysDifference * 5;
+  //     typeof(rental.fines) 
+  //     console.log(rental.fines)
+  //     await this.rentalRepository.save(rental)
+  //    }
+  //   }
+  //   )
+  //     }catch{
+  //         throw new HttpException('Failed to apply fines', HttpStatus.INTERNAL_SERVER_ERROR)
+  //      }
+  // }
+  //
+
+  async remove(id: string){
+    try{
+      const rental = await this.rentalRepository.findOneBy({id});
+      if(!rental){
+          throw new HttpException(
+            {message: 'rental not found'},
+            HttpStatus.NOT_FOUND,
+          );
+        }
+        await this.rentalRepository.remove(rental);
+        const status = {
+          message: 'Item removed successfully',
+          status: HttpStatus.OK,
+        };
+        return status;     
+      }catch{
+        throw new HttpException('Failed to delete the item', HttpStatus.INTERNAL_SERVER_ERROR)
+      }
   }
 }

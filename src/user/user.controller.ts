@@ -83,9 +83,4 @@ export class UserController {
     return this.userService.findAllBookmarked(userid);
   }
 
-  @Post('request/:id')
-  requestBook(@Param('id') bookId: string) {
-    return 'solicita livro para empréstimo';
-  }
-
 }

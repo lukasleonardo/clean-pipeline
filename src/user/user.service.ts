@@ -141,8 +141,6 @@ export class UserService implements IUserService {
     return 'retorna todos os livros emprestado';
   }
 
-  //*LIVROS *//
-
   async bookmarkBook(userId: string, bookEntity: BookEntity) {
     console.log(userId)
     console.log(bookEntity)
@@ -188,8 +186,4 @@ export class UserService implements IUserService {
     
   }
 
-
-  requestBook(bookId: string) {
-    return 'solicita livro para empréstimo';
-  }
 }

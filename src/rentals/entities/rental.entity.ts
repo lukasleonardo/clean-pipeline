@@ -8,19 +8,22 @@ export class RentalEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id:string
-  @Column('double precision')
-  fines:number
+
   @Column()
   loanDate: Date;
+  
   @Column()
   expiratedLoanDate: Date;
 
-  @OneToOne(() => UserEntity, {eager:true})
+  @Column('double precision', { default: 0})
+  fines: number;
+
+  @ManyToOne(() => UserEntity, {eager:true})
   @JoinColumn()
   user: UserEntity;
 
-  @ManyToOne(() => BookEntity, {eager:true})
+  @OneToOne(() => BookEntity, {eager:true})
   @JoinColumn()
-  book: BookEntity[];
+  book: BookEntity;
 
 }
