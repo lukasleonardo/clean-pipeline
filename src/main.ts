@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });
+
   app.useBodyParser('json')
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);

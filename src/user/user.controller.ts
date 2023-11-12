@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -13,13 +14,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
-import { ILoginData } from './interfaces/user.interface';
-
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService,
-    private authService: AuthService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService
+    ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -27,8 +31,8 @@ export class UserController {
   }
 
   @Post('login')
-  async login(@Body() loginData: ILoginData){
-    return this.authService.login(loginData);
+  async login(@Body() user: UserEntity){
+    return this.authService.login(user);
   }
 
 
@@ -53,7 +57,11 @@ export class UserController {
   }
 
   @Post('set/admin/:id')
+  // @UseGuards(RolesGuard)
+  // @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard)
   setToAdmin(@Param('id') id: string) {
+    
     return this.userService.setToAdmin(id);
   }
 
@@ -79,4 +87,5 @@ export class UserController {
   requestBook(@Param('id') bookId: string) {
     return 'solicita livro para empréstimo';
   }
+
 }

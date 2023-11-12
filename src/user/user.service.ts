@@ -1,35 +1,35 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { BookEntity } from '../book/entities/book.entity';
 import { IUserService } from './interfaces/userService.interface';
 import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
 
 @Injectable()
 export class UserService implements IUserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly entityManager: EntityManager,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { name, login, password, province, cpf, state } = createUserDto;
+    const { name, username, password, province, cpf } = createUserDto;
     const newUser = new UserEntity()
     newUser.name = name
-    newUser.login = login
+    newUser.username = username
     newUser.password = bcrypt.hashSync(password, 8)
     newUser.province = province
     newUser.cpf = cpf
-    newUser.state = state
   
 
     const checCpf = await this.userRepository.findOneBy({cpf:cpf})
-    const checkUser = await this.userRepository.findOneBy({login:login})
+    const checkUser = await this.userRepository.findOneBy({username:username})
     if (checkUser || checCpf){
       const error = {user: 'user already exists'};
       throw new HttpException(
@@ -46,7 +46,7 @@ export class UserService implements IUserService {
         HttpStatus.BAD_REQUEST,
       );
     } else {
-      const savedUser = await this.entityManager.getRepository(UserEntity).save(newUser)
+      const savedUser = await this.userRepository.save(newUser)
       return savedUser; 
     }
   }
@@ -56,12 +56,14 @@ export class UserService implements IUserService {
     return listUsers;
   }
 
-  async findOne(login: string) {
-    const listUser = await this.userRepository.findOneBy({login});
+  async findOne(username: string) {
+    const listUser = await this.userRepository.findOneBy({username});
     return listUser;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    const { name, username, password, province, cpf } = updateUserDto;
+
     const user = await this.userRepository.findOneBy({id});
     if(!user){
       const error = {user: 'user not found'};
@@ -71,29 +73,18 @@ export class UserService implements IUserService {
       );
     }
 
-    if(updateUserDto.name){
-      user.name = updateUserDto.name;
-    }
-    if(user.login == updateUserDto.login){
+    if(user.username == username){
       const error = {user: 'login already exists'};
       throw new HttpException(
         {message: 'Input data validation failed', error },
         HttpStatus.NOT_FOUND,
       );
     }
-      else{
-        user.login = updateUserDto.login;
-      }
-    
-    if(updateUserDto.password){
-      user.password = updateUserDto.password;
-    }
-    if(updateUserDto.province){
-      user.province = updateUserDto.province;
-    }
-    if(updateUserDto.name){
       user.name = updateUserDto.name;
-    }
+      user.username = username;
+      user.password = bcrypt.hashSync(password, 8);
+      user.province = updateUserDto.province;
+
    
     const errors = await validate(user);
     if (errors.length > 0){
@@ -118,10 +109,14 @@ export class UserService implements IUserService {
       );
     }
     await this.userRepository.remove(user);
-    return true;
+    const status = {
+      message: 'Item removed successfully',
+      status: HttpStatus.OK,
+    };
+    return status;
   }
-
-  // fazer o rota marcar usuario
+  
+ 
   async setToAdmin(id: string) {
     const user = await this.userRepository.findOneBy({id});
 

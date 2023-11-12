@@ -3,7 +3,7 @@ import { BookEntity } from '../../book/entities/book.entity';
 export interface IUser {
   Id: number;
   name: string;
-  login: string;
+  username: string;
   password: string;
   province: string;
   cpf: string;
@@ -14,7 +14,7 @@ export interface IUser {
 }
 
 export interface ILoginData {
-  login: string;
+  username: string;
   password: string;
 }
 
