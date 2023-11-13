@@ -61,10 +61,11 @@ export class BookService implements IBookService {
   async findAll():Promise<BookEntity[]>{
     const book = await this.bookRepository.find();
     if(!book){
-      throw new HttpException(
-        { message: 'No books have been found' },
-        HttpStatus.NOT_FOUND,
-      );
+      // throw new HttpException(
+      //   { message: 'No books have been found' },
+      //   HttpStatus.NOT_FOUND,
+      // );
+      return []
     }
     return book;
   }

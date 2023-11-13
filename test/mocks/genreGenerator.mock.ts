@@ -1,0 +1,13 @@
+import {faker } from '@faker-js/faker'
+import { GenreEntity } from '../../src/genre/entities/genre.entity';
+
+// Função para gerar um mock de GenreEntity
+export function generateMockGenreEntity(): GenreEntity {
+  return {
+    id: faker.string.uuid(),
+    name: faker.word.noun(),
+  };
+}
+// Exemplo de uso:
+const mockGenreEntity: GenreEntity = generateMockGenreEntity();
+console.log(mockGenreEntity);

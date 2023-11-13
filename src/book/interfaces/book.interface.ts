@@ -1,4 +1,4 @@
-import { Timestamp } from 'typeorm';
+
 import { GenreEntity } from '../../genre/entities/genre.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 
@@ -11,6 +11,6 @@ export interface IBook {
   state: string;
 
   genreList: GenreEntity[];
-  // createdBy: UserEntity;
-  createdAt: Timestamp;
+  createdBy: UserEntity;
+  createdAt: Date;
 }
