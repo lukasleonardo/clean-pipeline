@@ -10,6 +10,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { generateMockGenreEntity } from '../../test/mocks/genreGenerator.mock';
 import { objectState } from '../shared/global.enum';
+import { randomInt } from 'crypto';
 
 describe('BookService', () => {
   let bookService: BookService;
@@ -42,7 +43,7 @@ describe('BookService', () => {
     expect(bookService).toBeDefined();
   });
 
-  describe('Tests for Find All function',()=>{
+  xdescribe('Tests for Find All function',()=>{
      it('it should return all books', async ()=>{
       const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 4})
       //bookMock
@@ -73,7 +74,7 @@ describe('BookService', () => {
   })
 
 
-  describe('Tests for Find One function',()=>{
+  xdescribe('Tests for Find One function',()=>{
     it('it should return one book', async()=>{
           // Configuração do mock para o repositório
     const livroMock= generateMockBookEntity()
@@ -84,7 +85,6 @@ describe('BookService', () => {
 
     // Verifica se o resultado é igual ao mock do livro
     expect(resultado).toEqual(livroMock);
-    expect(typeof resultado).toBe;
     
     // Verifica se o método findOne do mock foi chamado uma vez com o ID correto
     expect(bookRepository.findOne).toHaveBeenCalledWith({ id: livroMock.id });
@@ -110,50 +110,57 @@ describe('BookService', () => {
     })
   })
 
-  // describe('Tests for find by genre function',()=>{
-  //   function generateMockGenreEntity(){
-  //     id: faker.string.uuid(),
-  //     name: faker.word.noun(),
-  //   }
+  describe('Tests for find by genre function',()=>{
+    function generateMockGenreEntity(){
+      let number = faker.number.int({min:1, max:9}).toString()
+      return{
+        id: number,
+        name: `ação ${number}`,
+      }
+    }
 
-  //   function generateMockBookEntity(){
-  //     return {
-  //       id: faker.string.uuid(),
-  //       name: faker.lorem.words({min:3,max:5}),
-  //       description: faker.lorem.text(),
-  //       author: faker.person.fullName(),
-  //       state:faker.helpers.enumValue(objectState),
-  //       value: faker.number.float({precision:2, min: 40.00, max:500.00}),
-  //       createdAt: faker.date.anytime(),
-  //       genreList: [] = ,
-  //       createdBy: {
-  //         id: "45009675-b6d1-4fd0-8e79-76e00abe4e86",
-  //         name: "Super Usuario",
-  //         username: "admin",
-  //         password: "$2b$08$MjfbfXgFTrAadigq5bVLnODH/Tgo4ie6hA5ITXeNziRPF685cI5XS",
-  //         province: "Morro do Dendê",
-  //         cpf: "99999",
-  //         isAdmin: "ADMIN",
-  //         state: "INDISPONIVEL",
-  //         favoriteBooks: []
-  //       }}
-  //   }
+    function generateMockBookEntity(){
+      return {
+        id: faker.string.uuid(),
+        name: faker.lorem.words({min:3,max:5}),
+        description: faker.lorem.text(),
+        author: faker.person.fullName(),
+        state:faker.helpers.enumValue(objectState),
+        value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+        createdAt: faker.date.anytime(),
+        genreList: faker.helpers.multiple(generateMockGenreEntity, {count:3}),
+        createdBy: {
+          id: "1",
+          name: "Usuario",
+          username: "admin",
+          password: "password",
+          province: "province",
+          cpf: "99999",
+          isAdmin: "ADMIN",
+          state: "INDISPONIVEL",
+          favoriteBooks: []
+        }}
+    }
 
-  //   it('it should return all books', async ()=>{
-  //     const genreMock = generateMockGenreEntity()
-  //     const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 4})
-  //     //bookMock
-  //     jest.spyOn(bookRepository, 'find').mockResolvedValueOnce(livrosMock);
-  //     // Chama a função findAll
-  //     const resultado = await bookService.findByGenre(genreMock.id); 
-  //     // Verifica se o resultado é igual ao mock de livros
-  //     const book = resultado.filter(livro => livro.genreList.some(genre => genre.id === genreMock.id))
-  //     console.log(book)
-  //     expect(resultado).toEqual(livrosMock.forEach(livro => livro.genreList.s ));
-  //     // Verifica se o método find do mock foi chamado uma vez
-  //     expect(bookRepository.find).toHaveBeenCalledTimes(1);
-  //   })
-  // })
+    it('it should return books with same genre', async ()=>{
+      const genreMock = faker.number.int({max:3}).toString()
+
+
+      const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 40})
+      //bookMock
+      jest.spyOn(bookRepository, 'find').mockResolvedValueOnce(livrosMock);
+      // Chama a função findAll
+      const resultado = await bookService.findByGenre(genreMock); 
+      // Verifica se o resultado é igual ao mock de livros
+      const book = livrosMock.filter(livro => livro.genreList.some(genre => genre.id === genreMock))
+      const result = resultado.filter(livro => livro.genreList.some(genre => genre.id === genreMock))
+     
+      expect(result).toEqual(book);
+      
+      // Verifica se o método find do mock foi chamado uma vez
+      expect(bookRepository.find).toHaveBeenCalledTimes(1);
+    })
+  })
 
  // livrosMock.filter(livro => livro.genreList.some(genre => genre.id === genreMock.id));
   

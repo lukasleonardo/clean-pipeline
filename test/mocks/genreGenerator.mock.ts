@@ -8,6 +8,3 @@ export function generateMockGenreEntity(): GenreEntity {
     name: faker.word.noun(),
   };
 }
-// Exemplo de uso:
-const mockGenreEntity: GenreEntity = generateMockGenreEntity();
-console.log(mockGenreEntity);
