@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BookEntity } from '../book/entities/book.entity';
 import { RentalEntity } from './entities/rental.entity';
 import { differenceInDays } from 'date-fns';
+import { objectState } from '../shared/global.enum';
 
 @Injectable()
 export class RentalsService {
@@ -64,9 +65,12 @@ export class RentalsService {
 
     rentals.forEach( async (rental) => {
      if(rental.expiratedLoanDate && rental.expiratedLoanDate < currentDate){ 
+      const user = await this.userRepository.findOneBy({id:rental.user.id}) 
+      user.state = objectState.indisponivel
       const daysDifference = differenceInDays(currentDate, rental.expiratedLoanDate);
       const multa = daysDifference * 5;
       rental.fines = multa
+      await this.userRepository.save(user)
       await this.rentalRepository.save(rental)
      }
     }
@@ -75,7 +79,10 @@ export class RentalsService {
           throw new HttpException('Failed to apply fines', HttpStatus.INTERNAL_SERVER_ERROR)
        }
   }
-  async applyPenalty() {}
+  async removePenalty(userid:string) {
+    const user = await this.userRepository.findOneBy({id:userid})
+    
+  }
 
   async remove(id: string){
     try{
