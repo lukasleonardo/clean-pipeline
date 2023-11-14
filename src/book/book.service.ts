@@ -166,13 +166,12 @@ export class BookService implements IBookService {
       book.state = objectState.disponivel
     }
     const savedBook = await this.bookRepository.save(book)
-    return book;
+    return savedBook;
 
   }
 
 async addGenreToBook(bookid:string, genreid:GenreEntity){
-    const book = await this.bookRepository.findOneBy( {id:bookid} )
-    
+    const book = await this.bookRepository.findOneBy( {id:bookid} )    
     if(book){
       const genre = await this.genreRepository.findOneBy({id:genreid.id})
       const genreExists = book.genreList.some((genre) => genre.id === genreid.id );
