@@ -62,11 +62,6 @@ export class UserController {
     return this.userService.setToAdmin(id);
   }
 
-  @Get('books')
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
-  }
-
   @Post('bookmark/:id')
   bookmarkBook(@Param('id') userid:string, @Body() book:BookEntity) {
     return this.userService.bookmarkBook(userid, book);

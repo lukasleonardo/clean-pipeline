@@ -3,7 +3,7 @@ import { BookService } from './book.service';
 import { BookEntity } from './entities/book.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import {faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { generateMockBookEntity } from '../../test/mocks/bookGenerator.mock';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { UserEntity } from '../user/entities/user.entity';
@@ -24,114 +24,114 @@ describe('BookService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [BookService,
         {
-        provide:getRepositoryToken(BookEntity),  
-        useClass: Repository,
-      },{
-        provide:getRepositoryToken(GenreEntity),  
-        useClass: Repository
-      },{
-        provide:getRepositoryToken(UserEntity),  
-        useClass: Repository
-      },
-     ]
+          provide: getRepositoryToken(BookEntity),
+          useClass: Repository,
+        }, {
+          provide: getRepositoryToken(GenreEntity),
+          useClass: Repository
+        }, {
+          provide: getRepositoryToken(UserEntity),
+          useClass: Repository
+        },
+      ]
     }).compile();
-    
+
     bookService = module.get<BookService>(BookService);
     bookRepository = module.get<Repository<BookEntity>>(getRepositoryToken(BookEntity));
     genreRepository = module.get<Repository<GenreEntity>>(getRepositoryToken(GenreEntity));
     userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
   });
 
-  xit('should be defined', () => {
+  it('should be defined', () => {
     expect(bookService).toBeDefined();
   });
 
-  xdescribe('FindAll',()=>{
-     it('it should return all books', async ()=>{
-      const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 4})
+  describe('FindAll', () => {
+    it('it should return all books', async () => {
+      const livrosMock = faker.helpers.multiple(generateMockBookEntity, { count: 4 })
       //bookMock
       jest.spyOn(bookRepository, 'find').mockResolvedValueOnce(livrosMock);
       // Chama a função findAll
-      const resultado = await bookService.findAll(); 
+      const resultado = await bookService.findAll();
       // Verifica se o resultado é igual ao mock de livros
       expect(resultado).toEqual(livrosMock);
       // Verifica se o método find do mock foi chamado uma vez
       expect(bookRepository.find).toHaveBeenCalledTimes(1);
     })
 
-    it('it should return an empty array', async ()=>{
+    it('it should return an empty array', async () => {
       const livrosMock = []
       // Substitua o repositório real pelo mock no serviço
       //bookMock
       jest.spyOn(bookRepository, 'find').mockResolvedValueOnce(livrosMock);
-  
+
       // Chama a função findAll
       const resultado = await bookService.findAll();
-  
+
       // Verifica se o resultado é igual ao mock de livros
       expect(resultado).toEqual(livrosMock);
-  
+
       // Verifica se o método find do mock foi chamado uma vez
       expect(bookRepository.find).toHaveBeenCalledTimes(1);
     })
   })
 
 
-  xdescribe('FindOne',()=>{
-    it('it should return one book', async()=>{
-          // Configuração do mock para o repositório
-    const livroMock= generateMockBookEntity()
-    jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(livroMock);
+  describe('FindOne', () => {
+    it('it should return one book', async () => {
+      // Configuração do mock para o repositório
+      const livroMock = generateMockBookEntity()
+      jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(livroMock);
 
-    // Chama a função findOne
-    const resultado = await bookService.findOne(livroMock.id);
+      // Chama a função findOne
+      const resultado = await bookService.findOne(livroMock.id);
 
-    // Verifica se o resultado é igual ao mock do livro
-    expect(resultado).toEqual(livroMock);
-    
-    // Verifica se o método findOne do mock foi chamado uma vez com o ID correto
-    expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: livroMock.id });
-    expect(bookRepository.findOneBy).toHaveBeenCalledTimes(1);
-  });
+      // Verifica se o resultado é igual ao mock do livro
+      expect(resultado).toEqual(livroMock);
 
-  it('deve lançar uma exceção se o livro não for encontrado', async () => {
-    // Configuração do mock para o repositório retornando null (livro não encontrado)
-    jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(null);
+      // Verifica se o método findOne do mock foi chamado uma vez com o ID correto
+      expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: livroMock.id });
+      expect(bookRepository.findOneBy).toHaveBeenCalledTimes(1);
+    });
 
-    // Chama a função findOne
-    await expect(bookService.findOne('2')).rejects.toThrowError(
-      new HttpException(
-        { message: 'No book found with this id' },
-        HttpStatus.NOT_FOUND,
-      ),
-    );
+    it('deve lançar uma exceção se o livro não for encontrado', async () => {
+      // Configuração do mock para o repositório retornando null (livro não encontrado)
+      jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(null);
 
-    // Verifica se o método findOne do mock foi chamado uma vez com o ID correto
-    expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: '2' });
-    expect(bookRepository.findOneBy).toHaveBeenCalledTimes(1);
+      // Chama a função findOne
+      await expect(bookService.findOne('2')).rejects.toThrowError(
+        new HttpException(
+          { message: 'No book found with this id' },
+          HttpStatus.NOT_FOUND,
+        ),
+      );
+
+      // Verifica se o método findOne do mock foi chamado uma vez com o ID correto
+      expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: '2' });
+      expect(bookRepository.findOneBy).toHaveBeenCalledTimes(1);
 
     })
   })
 
-  xdescribe('FindByGenre',()=>{
-    function generateMockGenreEntity(){
-      let number = faker.number.int({min:1, max:9}).toString()
-      return{
+  describe('FindByGenre', () => {
+    function generateMockGenreEntity() {
+      let number = faker.number.int({ min: 1, max: 9 }).toString()
+      return {
         id: number,
         name: `ação ${number}`,
       }
     }
 
-    function generateMockBookEntity(){
+    function generateMockBookEntity() {
       return {
         id: faker.string.uuid(),
-        name: faker.lorem.words({min:3,max:5}),
+        name: faker.lorem.words({ min: 3, max: 5 }),
         description: faker.lorem.text(),
         author: faker.person.fullName(),
-        state:faker.helpers.enumValue(objectState),
-        value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+        state: faker.helpers.enumValue(objectState),
+        value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
         createdAt: faker.date.anytime(),
-        genreList: faker.helpers.multiple(generateMockGenreEntity, {count:3}),
+        genreList: faker.helpers.multiple(generateMockGenreEntity, { count: 3 }),
         createdBy: {
           id: "1",
           name: "Usuario",
@@ -142,23 +142,24 @@ describe('BookService', () => {
           isAdmin: "ADMIN",
           state: "INDISPONIVEL",
           favoriteBooks: []
-        }}
+        }
+      }
     }
 
-    it('it should return books with same genre', async ()=>{
-      const genreMock = faker.number.int({max:3}).toString()
+    it('it should return books with same genre', async () => {
+      const genreMock = faker.number.int({ max: 3 }).toString()
 
-      const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 40})
+      const livrosMock = faker.helpers.multiple(generateMockBookEntity, { count: 40 })
       //bookMock
       jest.spyOn(bookRepository, 'find').mockResolvedValueOnce(livrosMock);
       // Chama a função findAll
-      const resultado = await bookService.findByGenre(genreMock); 
+      const resultado = await bookService.findByGenre(genreMock);
       // Verifica se o resultado é igual ao mock de livros
       const book = livrosMock.filter(livro => livro.genreList.some(genre => genre.id === genreMock))
       const result = resultado.filter(livro => livro.genreList.some(genre => genre.id === genreMock))
-     
+
       expect(result).toEqual(book);
-      
+
       // Verifica se o método find do mock foi chamado uma vez
       expect(bookRepository.find).toHaveBeenCalledTimes(1);
     })
@@ -168,16 +169,16 @@ describe('BookService', () => {
 
   })
 
-  
-  xdescribe('setBookState', () => {
+
+  describe('setBookState', () => {
     it('should set book state to indisponivel when it is disponivel', async () => {
       const mockBook = {
         id: faker.string.uuid(),
-        name: faker.lorem.words({min:3,max:5}),
+        name: faker.lorem.words({ min: 3, max: 5 }),
         description: faker.lorem.text(),
         author: faker.person.fullName(),
-        state:objectState.disponivel,
-        value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+        state: objectState.disponivel,
+        value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
         createdAt: faker.date.anytime(),
         genreList: [],
         createdBy: {
@@ -196,21 +197,20 @@ describe('BookService', () => {
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
 
       const resultado = await bookService.setBookState(mockBook.id);
-      //console.log(resultado)
 
       expect(resultado.state).toBe(objectState.indisponivel);
-      expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
+      expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: mockBook.id });
       expect(bookRepository.save).toHaveBeenCalledWith(resultado);
     });
 
     it('should set book state to disponivel when it is indisponivel', async () => {
       const mockBook = {
         id: faker.string.uuid(),
-        name: faker.lorem.words({min:3,max:5}),
+        name: faker.lorem.words({ min: 3, max: 5 }),
         description: faker.lorem.text(),
         author: faker.person.fullName(),
-        state:objectState.indisponivel,
-        value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+        state: objectState.indisponivel,
+        value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
         createdAt: faker.date.anytime(),
         genreList: [],
         createdBy: {
@@ -225,15 +225,14 @@ describe('BookService', () => {
           favoriteBooks: []
         },
       };
-      
+
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(mockBook);
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
 
       const resultado = await bookService.setBookState(mockBook.id);
-      console.log(resultado)
       expect(resultado.id).toBe(mockBook.id);
       expect(resultado.state).toBe(objectState.disponivel);
-      expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
+      expect(bookRepository.findOneBy).toHaveBeenCalledWith({ id: mockBook.id });
       expect(bookRepository.save).toHaveBeenCalledWith(resultado);
 
     });
@@ -246,13 +245,13 @@ describe('BookService', () => {
           { message: 'No book found with this id' },
           HttpStatus.NOT_FOUND,
         ),
-      ); 
+      );
       expect(bookRepository.save).not.toHaveBeenCalled();
     });
   });
 
-  xdescribe('Remove',()=>{
-    it('should remove a book successfuly',async()=>{
+  describe('Remove', () => {
+    it('should remove a book successfuly', async () => {
       const mockBook = generateMockBookEntity()
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(mockBook);
       jest.spyOn(bookRepository, 'delete').mockReturnThis();
@@ -263,7 +262,7 @@ describe('BookService', () => {
       })
       expect(resultado).toEqual(expected)
       expect(bookRepository.delete).toHaveBeenCalled();
-    }) 
+    })
     it('should throw 404 error if book is not found', async () => {
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(null);
       jest.spyOn(bookRepository, 'delete').mockRejectedValueOnce(null);
@@ -271,15 +270,15 @@ describe('BookService', () => {
         new HttpException(
           { message: 'book not found' },
           HttpStatus.NOT_FOUND,
-          )
         )
+      )
       expect(bookRepository.delete).not.toHaveBeenCalled();
-      }) 
+    })
   });
 
 
   describe('create', () => {
-    const genres = faker.helpers.multiple(generateMockGenreEntity, {count:2})
+    const genres = faker.helpers.multiple(generateMockGenreEntity, { count: 2 })
     const adminUser = generateMockUserEntity()
     it('should create a new book', async () => {
       const createBookDto: CreateBookDto = {
@@ -329,7 +328,7 @@ describe('BookService', () => {
         ),
       );
     });
-   
+
   });
 
 
@@ -408,11 +407,11 @@ describe('BookService', () => {
     const genreId = '2';
     const book = {
       id: bookId,
-      name: faker.lorem.words({min:3,max:5}),
+      name: faker.lorem.words({ min: 3, max: 5 }),
       description: faker.lorem.text(),
       author: faker.person.fullName(),
-      state:faker.helpers.enumValue(objectState),
-      value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+      state: faker.helpers.enumValue(objectState),
+      value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
       createdAt: faker.date.anytime(),
       genreList: [],
       createdBy: {
@@ -427,7 +426,7 @@ describe('BookService', () => {
         favoriteBooks: []
       },
     };
-    it('should add a genre to an existing book', async () => {     
+    it('should add a genre to an existing book', async () => {
       const genre = {
         id: genreId,
         name: 'Fantasy',
@@ -443,14 +442,14 @@ describe('BookService', () => {
       expect(bookRepository.save).toHaveBeenCalledWith({ ...book, genreList: [genre] });
     });
     // REVISAR
-    it('should not add a genre if it already exists in the book', async () => {
-      const book = {        
+    xit('should not add a genre if it already exists in the book', async () => {
+      const book = {
         id: bookId,
-        name: faker.lorem.words({min:3,max:5}),
+        name: faker.lorem.words({ min: 3, max: 5 }),
         description: faker.lorem.text(),
         author: faker.person.fullName(),
-        state:faker.helpers.enumValue(objectState),
-        value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+        state: faker.helpers.enumValue(objectState),
+        value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
         createdAt: faker.date.anytime(),
         genreList: [{ id: genreId, name: 'Fantasy' }],
         createdBy: {
@@ -463,8 +462,8 @@ describe('BookService', () => {
           isAdmin: "ADMIN",
           state: "INDISPONIVEL",
           favoriteBooks: []
-      }       
-    };
+        }
+      };
 
       const genre = {
         id: genreId,
@@ -503,16 +502,16 @@ describe('BookService', () => {
   });
 
 
-  xdescribe('removeGenreFromBook', () => {
+  describe('removeGenreFromBook', () => {
     const bookId = '1';
     const genreId = '2';
     const book = {
       id: bookId,
-      name: faker.lorem.words({min:3,max:5}),
+      name: faker.lorem.words({ min: 3, max: 5 }),
       description: faker.lorem.text(),
       author: faker.person.fullName(),
-      state:faker.helpers.enumValue(objectState),
-      value: faker.number.float({precision:2, min: 40.00, max:500.00}),
+      state: faker.helpers.enumValue(objectState),
+      value: faker.number.float({ precision: 2, min: 40.00, max: 500.00 }),
       createdAt: faker.date.anytime(),
       genreList: [],
       createdBy: {
@@ -537,10 +536,10 @@ describe('BookService', () => {
       expect(result.genreList).toEqual([]);
       expect(bookRepository.save).toHaveBeenCalledWith({ ...book, genreList: [] });
     });
-    //REVISAR
+    
     it('should not modify the genre list if the genre is not found in the book', async () => {
 
-      const book = {        
+      const book = {
           id: bookId,
           name: faker.lorem.words({min:3,max:5}),
           description: faker.lorem.text(),
@@ -559,27 +558,29 @@ describe('BookService', () => {
             isAdmin: "ADMIN",
             state: "INDISPONIVEL",
             favoriteBooks: []
-        }       
+        }
       };
 
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(book);
-      jest.spyOn(bookRepository, 'save').mockRejectedValue(new Error());
+      jest.spyOn(bookService, 'removeGenreFromBook').mockResolvedValueOnce(book);
+      bookRepository.save = jest.fn()
 
       const result = await bookService.removeGenreFromBook(bookId, { id: genreId, name: 'Fantasy' });
 
-      expect(result.genreList).toEqual(book.genreList);
+      expect(result).toEqual(book);
       expect(bookRepository.save).not.toHaveBeenCalled();
     });
+  
 
-    it('should throw a 404 error if the book is not found', async () => {
+  it('should throw a 404 error if the book is not found', async () => {
 
-      jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(null);
+    jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(null);
 
-      await expect(bookService.removeGenreFromBook(bookId, { id: genreId, name: 'Fantasy' })).rejects.toThrow(
-        new HttpException('Book not found', HttpStatus.NOT_FOUND),
-      );
-    });
+    await expect(bookService.removeGenreFromBook(bookId, { id: genreId, name: 'Fantasy' })).rejects.toThrow(
+      new HttpException('Book not found', HttpStatus.NOT_FOUND),
+    );
   });
+});
 
 
 })

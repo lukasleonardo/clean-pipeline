@@ -143,11 +143,6 @@ export class UserService implements IUserService {
     return savedUser;
   }
 
-
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
-  }
-
   async bookmarkBook(userId: string, bookEntity: BookEntity) {
 
     const user = await this.userRepository.findOneBy({ id: userId })
