@@ -310,7 +310,7 @@ describe('UserController', () => {
             id: userId,
             name: 'teste4',
             username: 'teste4',
-            password: '$2b$08$wW/12JL2DNV7MnwylHU3JuzLAF1q6.D8yIV2HeRqI3f/d6lHZkPFu',
+            password: '12345',
             province: 'rio de janeiro',
             cpf: '17378660743',
             isAdmin: 'ADMIN',
