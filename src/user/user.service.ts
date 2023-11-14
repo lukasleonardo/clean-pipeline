@@ -60,6 +60,13 @@ export class UserService implements IUserService {
 
   async findOne(username: string) {
     const listUser = await this.userRepository.findOneBy({username});
+    if(!listUser){
+      const error = {user: 'user not found'};
+      throw new HttpException(
+        {message: 'Input data validation failed', error },
+        HttpStatus.NOT_FOUND,
+      );
+    }
     return listUser;
   }
 

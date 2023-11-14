@@ -82,5 +82,4 @@ export class UserController {
   findAllBookmarked(@Param('id') userid: string) {
     return this.userService.findAllBookmarked(userid);
   }
-
 }
