@@ -160,14 +160,12 @@ export class UserService implements IUserService {
       } else {
         throw new HttpException('Book already in favorites', HttpStatus.NOT_FOUND);
       }
-    }else {
+    } else {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   }
 
   async removeBookmarkBook(userId: string, book: BookEntity) {
-
-
     const user = await this.userRepository.findOneBy({ id: userId })
     if (user) {
       user.favoriteBooks = user.favoriteBooks.filter((favoriteBooks) => favoriteBooks.id !== book.id);
@@ -176,12 +174,11 @@ export class UserService implements IUserService {
     } else {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-
   }
 
   async findAllBookmarked(userid: string) {
     const listUsers = await this.userRepository.findOneBy({ id: userid });
-    if(!listUsers){
+    if (!listUsers) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return listUsers.favoriteBooks;
