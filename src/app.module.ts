@@ -23,9 +23,4 @@ import { UpdateRequestMiddleware } from './auth/auth.middleware';
   providers: [AppService],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(UpdateRequestMiddleware)
-      .forRoutes('book','genre','rentals')     
-  }
 }
