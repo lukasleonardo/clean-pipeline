@@ -165,13 +165,12 @@ export class BookService implements IBookService {
     }else{
       book.state = objectState.disponivel
     }
-    await this.bookRepository.save(book)
+    const savedBook = await this.bookRepository.save(book)
     return book;
 
   }
 
 async addGenreToBook(bookid:string, genreid:GenreEntity){
-  try {
     const book = await this.bookRepository.findOneBy( {id:bookid} )
     
     if(book){
@@ -181,18 +180,13 @@ async addGenreToBook(bookid:string, genreid:GenreEntity){
         book.genreList.push(genre)
         return await this.bookRepository.save(book)
       }
-      
-    }else{
+   }else{
       throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
-   } 
-  } catch (error) {
-      throw new HttpException('invalid input data', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+   }
   }
     
-async removeGenreFromBook(bookid: string, genreid: GenreEntity) {
-      
-      try {
+async removeGenreFromBook(bookid: string, genreid: GenreEntity) {     
+
         const book = await this.bookRepository.findOneBy( {id:bookid} )
 
         if (book) {
@@ -204,9 +198,6 @@ async removeGenreFromBook(bookid: string, genreid: GenreEntity) {
         } else {
           throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
         }
-      } catch (error) {
-        throw new HttpException('Attempt to remove book genre failed', HttpStatus.INTERNAL_SERVER_ERROR);
-      }
   }
 
 }
