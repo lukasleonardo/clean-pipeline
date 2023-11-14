@@ -19,8 +19,7 @@ import { Roles } from '../auth/guards/roles.decorator';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 
-//@UseGuards(JwtAuthGuard)
-
+@UseGuards(JwtAuthGuard)
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService,
@@ -36,8 +35,6 @@ export class BookController {
   }
 
   @Get()
-  @UseGuards(RolesGuard) 
-  @Roles('ADMIN')
   findAll() {
     return this.bookService.findAll();
   }
@@ -53,11 +50,15 @@ export class BookController {
   }
 
   @Put(':id')
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(id, updateBookDto);
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN')
   remove(@Param('id') id: string) {
     return this.bookService.remove(id);
   }
@@ -69,12 +70,16 @@ export class BookController {
     return this.bookService.setBookState(id);
   }
 
-  @Post('genre/:id') 
+  @Post('genre/:id')
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN') 
   addGenreToBook(@Param('id') bookid:string, @Body() genreid:GenreEntity){
     return this.bookService.addGenreToBook(bookid,genreid)
   }
 
   @Delete('genre/:id')
+  @UseGuards(RolesGuard) 
+  @Roles('ADMIN')
   removeGenreFromBook(@Param('id') bookid:string, @Body() genreid:GenreEntity){
     return this.bookService.removeGenreFromBook(bookid,genreid)
   }

@@ -6,7 +6,6 @@ import { BookModule } from './book/book.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { RentalsModule } from './rentals/rentals.module';
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UpdateRequestMiddleware } from './auth/auth.middleware';
 
@@ -24,5 +23,5 @@ import { UpdateRequestMiddleware } from './auth/auth.middleware';
   providers: [AppService],
 })
 export class AppModule {
-
+  
 }
