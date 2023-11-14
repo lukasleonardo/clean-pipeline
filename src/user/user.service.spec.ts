@@ -229,7 +229,6 @@ describe('UserService', () => {
 
   describe('setToAdmin', () => {
     it('should set user to admin', async () => {
-      // Arrange
       const userId = '1';
 
       const existingUser: UserEntity = {
@@ -266,15 +265,278 @@ describe('UserService', () => {
     });
   });
 
-  describe('', () => {
+  describe('bookmarkbook', () => {
+    it('should bookmark a book for a user', async () => {
+      const userId = '1';
+      const bookEntity: BookEntity = {
+        id: '1',
+        name: 'galos galaticos',
+        description: 'galos galaticos',
+        author: 'galo',
+        value: 0,
+        state: 'DISPONIVEL',
+        genreList: [],
+        createdBy: {
+          id: '2',
+          name: 'teste2',
+          username: 'teste2',
+          password: '12345',
+          province: 'rj',
+          cpf: '12324545',
+          isAdmin: 'ADMIN',
+          state: 'DISPONIVEL',
+          favoriteBooks: []
+        },
+        createdAt: new Date(),
+      };
+
+      const existingUser: UserEntity = {
+        id: userId,
+        name: 'teste',
+        username: 'banana',
+        password: '12345',
+        province: 'rj',
+        cpf: '123456789',
+        isAdmin: 'USER',
+        state: 'DISPONIVEL',
+        favoriteBooks: [],
+      };
+
+      const existingBook: BookEntity = {
+        id: '2',
+        name: 'uma historia de amor',
+        description: 'amor',
+        author: 'luciano',
+        value: 29.99,
+        state: 'disponivel',
+        genreList: [],
+        createdBy: {
+          id: '2',
+          name: 'teste2',
+          username: 'teste2',
+          password: '12345',
+          province: 'rj',
+          cpf: '12324545',
+          isAdmin: 'ADMIN',
+          state: 'DISPONIVEL',
+          favoriteBooks: []
+        },
+        createdAt: new Date(),
+      };
+
+      jest.spyOn(userService['userRepository'], 'findOneBy').mockResolvedValueOnce(existingUser);
+      jest.spyOn(userService['bookRepository'], 'findOneBy').mockResolvedValueOnce(existingBook);
+      jest.spyOn(userService['userRepository'], 'save').mockResolvedValueOnce(existingUser);
+
+      const result = await userService.bookmarkBook(userId, bookEntity);
+      expect(result.favoriteBooks.length).toBe(1);
+      expect(result.favoriteBooks[0]).toEqual(existingBook);
+    });
+
+
+    it('should throw a not found exception if the user is not found', async () => {
+      const userId = '1';
+      const bookId = 'bookId';
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
+
+      await expect(userService.bookmarkBook(userId, { id: bookId } as BookEntity)).rejects.toThrowError(
+        new HttpException('User not found', HttpStatus.NOT_FOUND),
+      );
+    });
+
+    it('should throw a not found exception if the book is already in favorites', async () => {
+      const userId = '1';
+      const bookId = 'bookId';
+
+      const userMock: UserEntity = {
+        id: userId,
+        favoriteBooks: [{ id: bookId } as BookEntity],
+        name: 'teste2',
+        username: 'teste2',
+        password: '12345',
+        province: 'rj',
+        cpf: '12324545',
+        isAdmin: 'ADMIN',
+        state: 'DISPONIVEL',
+      };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(userMock);
+      jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce({ id: bookId } as BookEntity);
+
+      await expect(userService.bookmarkBook(userId, { id: bookId } as BookEntity)).rejects.toThrowError(
+        new HttpException('Book already in favorites', HttpStatus.NOT_FOUND),
+      );
+    });
+
 
   });
 
-  describe('', () => {
+  describe('remove bookmark', () => {
+    it('should remove a bookmarked book for a user', async () => {
+      const userId = '1';
+      const book: BookEntity = {
+        id: '2',
+        name: 'book',
+        description: 'book',
+        author: 'book',
+        value: 49.99,
+        state: 'DISPONIVEL',
+        genreList: [],
+        createdBy: {
+          id: '2',
+          name: 'teste',
+          username: 'teste',
+          password: '123345',
+          province: 'r',
+          cpf: '1313241',
+          isAdmin: 'ADMIN',
+          state: 'DISPONIVEL',
+          favoriteBooks: []
+        },
+        createdAt: new Date(),
+      };
+      const existingUser: UserEntity = {
+        id: userId,
+        name: 'teste',
+        username: 'banana',
+        password: '12345',
+        province: 'rj',
+        cpf: '123456789',
+        isAdmin: 'USER',
+        state: 'DISPONIVEL',
+        favoriteBooks: [book],
+      }
 
+      const userAfterRemove: UserEntity = {
+        id: userId,
+        name: 'teste',
+        username: 'banana',
+        password: '12345',
+        province: 'rj',
+        cpf: '123456789',
+        isAdmin: 'USER',
+        state: 'DISPONIVEL',
+        favoriteBooks: [],
+      }
+      jest.spyOn(userService['userRepository'], 'findOneBy').mockResolvedValueOnce(existingUser);
+
+      jest.spyOn(userService['userRepository'], 'save').mockResolvedValueOnce(userAfterRemove);
+
+      const result = await userService.removeBookmarkBook(userId, book);
+
+      expect(result.favoriteBooks).toEqual([]);
+    });
+
+
+    it('should throw a not found exception if the user is not found', async () => {
+      const userId = '3';
+      const user: UserEntity = {
+        id: userId,
+        name: 'teste',
+        username: 'banana',
+        password: '12345',
+        province: 'rj',
+        cpf: '123456789',
+        isAdmin: 'USER',
+        state: 'DISPONIVEL',
+        favoriteBooks: [],
+      }
+      const book: BookEntity = {
+        id: '1',
+        name: 'book',
+        description: 'book',
+        author: 'luciano',
+        value: 49.99,
+        state: 'DISPONIVEL',
+        genreList: [],
+        createdBy: {
+          id: '2',
+          name: 'teste',
+          username: 'teste',
+          password: '12345',
+          province: 'rj',
+          cpf: '1234355',
+          isAdmin: 'ADMIN',
+          state: 'DISPONIVEL',
+          favoriteBooks: []
+        },
+        createdAt: new Date(),
+      };
+
+      jest.spyOn(userService['userRepository'], 'findOneBy').mockResolvedValueOnce(null);
+
+      await expect(userService.removeBookmarkBook(userId, book)).rejects.toThrowError(
+        new HttpException('User not found', HttpStatus.NOT_FOUND),
+      );
+    });
   });
 
-  describe('', () => {
+  describe('FindAllBookmarked', () => {
+    it('should return an array of bookmarked books for a user', async () => {
+      // Arrange
+      const userId = '1';
+      const userMock: UserEntity = {
+        id: userId,
+        favoriteBooks: [
+          { id: 'bookId1', name: 'Book 1' } as BookEntity,
+          { id: 'bookId2', name: 'Book 2' } as BookEntity,
+        ],
+        name: 'teste',
+        username: 'teste',
+        password: '12345',
+        province: 'rj',
+        cpf: '1234355',
+        isAdmin: 'ADMIN',
+        state: 'DISPONIVEL'
+      };
 
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(userMock);
+
+      // Act
+      const result = await userService.findAllBookmarked(userId);
+
+      // Assert
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
+      expect(result).toEqual(userMock.favoriteBooks);
+    });
+
+    it('should return an empty array if user has no bookmarked books', async () => {
+      // Arrange
+      const userId = '1';
+      const userMock: UserEntity = {
+        id: userId,
+        favoriteBooks: [],
+        name: 'teste',
+        username: 'teste',
+        password: '12345',
+        province: 'rj',
+        cpf: '1234355',
+        isAdmin: 'ADMIN',
+        state: 'DISPONIVEL'
+      };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(userMock);
+
+      // Act
+      const result = await userService.findAllBookmarked(userId);
+
+      // Assert
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
+      expect(result).toEqual([]);
+    });
+    
+    it('should throw a not found exception if user is not found', async () => {
+      // Arrange
+      const userId = '1';
+    
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
+    
+      // Act and Assert
+      await expect(userService.findAllBookmarked(userId)).rejects.toThrowError(
+        new HttpException('User not found', HttpStatus.NOT_FOUND),
+      );
+    });
   });
 });
+
