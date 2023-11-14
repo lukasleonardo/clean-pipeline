@@ -51,6 +51,6 @@ export class BookEntity implements IBook {
   createdBy: UserEntity;
 
   @CreateDateColumn({ type: 'timestamp', default: 'now()'})
-  createdAt: Timestamp;
+  createdAt: Date;
 
 }
