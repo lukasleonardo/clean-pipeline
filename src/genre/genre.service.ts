@@ -14,9 +14,7 @@ export class GenreService implements IGenreService {
   ) { }
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
-    //desestruturação de objeto
     const { name } = createGenreDto;
-    // Verifica se já existe na tabela
     const genre = await this.genreRepository.findOneBy({ name: name });
     if (genre) {
       const error = { genre: 'genre already exists in table genre' };

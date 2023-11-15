@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,7 @@ import { IUserService } from './interfaces/userService.interface';
 import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/guards/roles.decorator';
+
 
 @Injectable()
 export class UserService implements IUserService {
@@ -29,11 +28,10 @@ export class UserService implements IUserService {
     newUser.province = province
     newUser.cpf = cpf
 
-
-    const checCpf = await this.userRepository.findOneBy({ cpf: cpf })
-    const checkUser = await this.userRepository.findOneBy({ username: username })
-    if (checkUser || checCpf) {
-      const error = { user: 'user already exists' };
+    const checCpf = await this.userRepository.findOneBy({cpf:cpf})
+    const checkUser = await this.userRepository.findOneBy({username:username})
+    if (checkUser || checCpf){
+      const error = {user: 'user already exists'};
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
@@ -46,31 +44,31 @@ export class UserService implements IUserService {
     
   }
 
-  async findAll() {
+  async findAll():Promise<UserEntity[]> {
     const listUsers = await this.userRepository.find()
     return listUsers;
   }
 
-  async findOne(username: string) {
-    const listUser = await this.userRepository.findOneBy({ username });
-    if (!listUser) {
-      const error = { user: 'user not found' };
+
+  async findOne(username: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({username});
+    if (!user) {
       throw new HttpException(
-        { message: 'Input data validation failed', error },
+        {message: 'User was not found' },
         HttpStatus.NOT_FOUND,
       );
     }
-    return listUser;
+    return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const { name, username, password, province, cpf } = updateUserDto;
 
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) {
-      const error = { user: 'user not found' };
-      throw new HttpException(
-        { message: 'Input data validation failed', error },
+
+    const user = await this.userRepository.findOneBy({id});
+    if(!user){
+        throw new HttpException(
+        {message: 'User was not found' },
         HttpStatus.NOT_FOUND,
       );
     }
@@ -78,8 +76,8 @@ export class UserService implements IUserService {
     if (user.username == username) {
       const error = { user: 'login already exists' };
       throw new HttpException(
-        { message: 'Input data validation failed', error },
-        HttpStatus.NOT_FOUND,
+        {message: 'username already exists', error },
+        HttpStatus.BAD_REQUEST,
       );
     }
     user.name = name;
@@ -102,11 +100,10 @@ export class UserService implements IUserService {
   }
 
   async remove(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) {
-      const error = { user: 'user not found' };
+    const user = await this.userRepository.findOneBy({id});
+    if (!user){
       throw new HttpException(
-        { message: 'Input data validation failed', error },
+        {message: 'User was not found' },
         HttpStatus.NOT_FOUND,
       );
     }
@@ -118,64 +115,66 @@ export class UserService implements IUserService {
     return status;
   }
 
-
-  async setToAdmin(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
-
-    if (!user) {
-      const error = { user: 'user not found' };
+  
+ 
+  async setToAdmin(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({id});
+    if (!user){
       throw new HttpException(
-        { message: 'Input data validation failed', error },
+        {message: 'User was not found'},
         HttpStatus.NOT_FOUND,
       );
-    }
+    }  
+    user.role = Role.admin;  
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
+  }
 
-    user.isAdmin = Role.admin;
-
+  async unSetAdmin(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({id});
+    if (!user){
+      throw new HttpException(
+        {message: 'User was not found'},
+        HttpStatus.NOT_FOUND,
+      );
+    } 
+    user.role = Role.user;
     const savedUser = await this.userRepository.save(user);
     return savedUser;
   }
 
 
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
+  async bookmarkBook(userId: string, bookEntity: BookEntity): Promise<UserEntity> {
+      const user = await this.userRepository.findOneBy( {id: userId} )
+      if (user){
+        const book = await this.bookRepository.findOneBy({id:bookEntity.id})
+        const bookExists = user.favoriteBooks.some((user) => user.id === bookEntity.id );
+        if(!bookExists && book != null){
+          user.favoriteBooks.push(book)
+          return await this.userRepository.save(user)
+        }
+      }else{
+        throw new HttpException('User was not found', HttpStatus.NOT_FOUND);
+    }
   }
 
-  async bookmarkBook(userId: string, bookEntity: BookEntity) {
-
-    const user = await this.userRepository.findOneBy({ id: userId })
-    if (user) {
-      const book = await this.bookRepository.findOneBy({ id: bookEntity.id })
-      const bookExists = user.favoriteBooks.some((user) => user.id === bookEntity.id);
-      if (!bookExists && book != null) {
-        user.favoriteBooks.push(book)
-        return await this.userRepository.save(user)
+  async removeBookmarkBook(userId:string, book: BookEntity): Promise<UserEntity> {
+      const user = await this.userRepository.findOneBy( {id:userId} )
+      if (user) {
+        user.favoriteBooks = user.favoriteBooks.filter((favoriteBooks) => favoriteBooks.id !== book.id);
+        return await this.userRepository.save(user) 
       } else {
-        throw new HttpException('Book already in favorites', HttpStatus.NOT_FOUND);
+        throw new HttpException('User was not found', HttpStatus.NOT_FOUND);
       }
-    } else {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-  }
+  
+  async findAllBookmarked(userid: string): Promise<BookEntity[]> {
+    const listUsers = await this.userRepository.findOneBy({id: userid});
 
-  async removeBookmarkBook(userId: string, book: BookEntity) {
-    const user = await this.userRepository.findOneBy({ id: userId })
-    if (user) {
-      user.favoriteBooks = user.favoriteBooks.filter((favoriteBooks) => favoriteBooks.id !== book.id);
-      return await this.userRepository.save(user)
-
-    } else {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-  }
-
-  async findAllBookmarked(userid: string) {
-    const listUsers = await this.userRepository.findOneBy({ id: userid });
     if (!listUsers) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return listUsers.favoriteBooks;
-
   }
 
 }

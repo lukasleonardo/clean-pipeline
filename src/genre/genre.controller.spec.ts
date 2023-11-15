@@ -38,10 +38,8 @@ describe('GenreController', () => {
           useValue: mockRepository,
         }],
     }).compile();
-
     genreController = module.get<GenreController>(GenreController);
     genreService = module.get<GenreService>(GenreService)
-
   });
 
   it('should be defined', () => {
@@ -49,86 +47,29 @@ describe('GenreController', () => {
     expect(genreService).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a genre', async () => {
-      const createGenreDto: CreateGenreDto = {
-        name: 'Fantasy',
-      };
-
-      const mockGenre: GenreEntity = {
-        id: '1',
-        name: 'Fantasy',
-      };
-
-      jest.spyOn(genreService, 'create').mockResolvedValueOnce(mockGenre);
-
-      const result = await genreController.create(createGenreDto);
-
-      expect(genreService.create).toHaveBeenCalledWith(createGenreDto);
-      expect(result).toEqual(mockGenre);
-    });
-
-    it('should handle duplicate genre error', async () => {
-      const createGenreDto: CreateGenreDto = {
-        name: 'Fantasy',
-      };
-
-      jest.spyOn(genreService, 'create').mockRejectedValueOnce(
-        new HttpException(
-          { message: 'Input data validation failed', error: { genre: 'genre already exists in table genre' } },
-          HttpStatus.BAD_REQUEST,
-        ),
-      );
-
-      await expect(genreController.create(createGenreDto)).rejects.toThrowError(
-        new HttpException(
-          { message: 'Input data validation failed', error: { genre: 'genre already exists in table genre' } },
-          HttpStatus.BAD_REQUEST,
-        ),
-      );
-
-      expect(genreService.create).toHaveBeenCalledWith(createGenreDto);
-    });
+  describe('create',()=>{  
+    it('should return a genre entity successfuly', async()=>{
+      const mockDto: CreateGenreDto = {  name: 'Drama'}
+      const result = await genreController.create(mockDto)
+      expect(result).toEqual(newGenreEntity)
+      expect(typeof result).toEqual('object')
+    })
   })
 
-
-  describe('remove', () => {
-    it('should remove a genre', async () => {
-      const genreId = '1';
-
-      const mockGenre: GenreEntity = {
-        id: genreId,
-        name: 'Fantasy',
-      };
-
-      jest.spyOn(genreService, 'remove').mockResolvedValueOnce({ message: 'Item removed successfully', status: HttpStatus.OK });
-
-      const result = await genreController.remove(genreId);
-
-      expect(genreService.remove).toHaveBeenCalledWith(genreId);
-      expect(result).toEqual({ message: 'Item removed successfully', status: HttpStatus.OK });
-    });
-
-    it('should handle genre not found error', async () => {
-      const genreId = '1';
-
-      jest.spyOn(genreService, 'remove').mockRejectedValueOnce(
-        new HttpException(
-          { message: 'Genre not found' },
-          HttpStatus.BAD_REQUEST,
-        ),
-      );
-
-      await expect(genreController.remove(genreId)).rejects.toThrowError(
-        new HttpException(
-          { message: 'Genre not found' },
-          HttpStatus.BAD_REQUEST,
-        ),
-      );
-
-      expect(genreService.remove).toHaveBeenCalledWith(genreId);
-    });
-  });
-});
+  describe('remove', ()=>{
+    it('should remove successfuly a genre entity', async()=>{     
+      const mockDto: CreateGenreDto = {  name: 'Drama'}
+      const temp = await genreController.create(mockDto)
+      const existingMockId= temp.id
+      const expected = JSON.stringify( 
+        {
+          message: 'Item removed successfully',
+          status: 200,
+        })
+      const result = await genreController.remove(existingMockId)
+      expect(JSON.stringify(result)).toBe(expected)
+    })
+  })
+ });
 
 

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,9 +6,11 @@ import { BookEntity } from '../book/entities/book.entity';
 import { RentalEntity } from './entities/rental.entity';
 import { differenceInDays } from 'date-fns';
 import { objectState } from '../shared/global.enum';
+import { IRentalService } from './Interfaces/rentalService.interface';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 @Injectable()
-export class RentalsService {
+export class RentalsService implements IRentalService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository:Repository<UserEntity>,
@@ -18,7 +20,7 @@ export class RentalsService {
     private readonly rentalRepository:Repository<RentalEntity>
   ){}
 
-  async requestBook(userid:string, bookEntity: BookEntity) {
+  async requestBook(userid:string, bookEntity: BookEntity):Promise<RentalEntity> {
     try{
       const user = await this.userRepository.findOneBy({id:userid})
       const rentals = await this.rentalRepository.find({where:{user:{id:userid}}})
@@ -41,23 +43,22 @@ export class RentalsService {
     }
   }
 
-  async retrieveAllFines() {
+
+  async retrieveAllFines():Promise<RentalEntity[]> {
     const rentals = await this.rentalRepository.find()
     return rentals;
   }
 
-  async findAllFromUser(userid: string) {
+
+  async findAllFromUser(userid: string):Promise<RentalEntity[]> {
     const userRentals = await this.userRepository.findOneBy({id:userid})
     if(userRentals){
       const rentals = await this.rentalRepository.find({where:{user:{id:userRentals.id}}})
       return rentals
     }
-
   }
 
-  
 
-  // definir regra de negocio!!!
   async applyFines() {
    try{
     const rentals = await this.rentalRepository.find()
@@ -73,16 +74,18 @@ export class RentalsService {
       await this.userRepository.save(user)
       await this.rentalRepository.save(rental)
      }
+     const status = {
+      message: 'Routine was concluded successfuly',
+      status: HttpStatus.OK,
+    }
+     return status;
     }
     )
       }catch{
           throw new HttpException('Failed to apply fines', HttpStatus.INTERNAL_SERVER_ERROR)
        }
   }
-  async removePenalty(userid:string) {
-    const user = await this.userRepository.findOneBy({id:userid})
-    
-  }
+
 
   async remove(id: string){
     try{
@@ -103,4 +106,6 @@ export class RentalsService {
         throw new HttpException('Failed to delete the item', HttpStatus.INTERNAL_SERVER_ERROR)
       }
   }
+
+
 }

@@ -73,7 +73,7 @@ describe('UserController', () => {
         province: 'rio de janeiro',
         cpf: '17378660743',
         password: '12345',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -94,7 +94,7 @@ describe('UserController', () => {
         name: 'teste',
         province: 'a',
         cpf: '1234',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -121,7 +121,7 @@ describe('UserController', () => {
         password: '12345',
         province: 'rj',
         cpf: '12345',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -145,7 +145,7 @@ describe('UserController', () => {
           password: '12345',
           province: 'RJ',
           cpf: '12345678901',
-          isAdmin: '',
+          role: '',
           state: '',
           favoriteBooks: [],
         },
@@ -156,7 +156,7 @@ describe('UserController', () => {
           password: '54321',
           province: 'SP',
           cpf: '98765432109',
-          isAdmin: '',
+          role: '',
           state: '',
           favoriteBooks: [],
         },
@@ -182,7 +182,7 @@ describe('UserController', () => {
         password: '12345',
         province: 'RJ',
         cpf: '12345678901',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: [],
       };
@@ -227,7 +227,7 @@ describe('UserController', () => {
           password: '12345',
           province: 'RJ',
           cpf: '12345678901',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: '',
           favoriteBooks: [],
         };
@@ -244,47 +244,46 @@ describe('UserController', () => {
         password: '12345',
         province: 'RJ',
         cpf: '12345678901',
-        isAdmin: 'ADMIN',
+        role: 'ADMIN',
         state: '',
         favoriteBooks: [],
       });
     });
-  });
-  describe('bookMark', () => {
-    it('should bookmark a book for a user', async () => {
-      const userId = '1';
-      const book: BookEntity = {
-        id: '1',
-        name: 'galos',
-        description: 'galos galaticos',
-        author: 'galo cego',
-        value: 0,
-        state: 'DISPONIVEL',
-        genreList: [],
-        createdBy: {
+    describe('bookMark', () => {
+      it('should bookmark a book for a user', async () => {
+        const userId = '1';
+        const book: BookEntity = {
           id: '1',
-          name: 'teste',
+          name: 'galos',
+          description: 'galos galaticos',
+          author: 'galo cego',
+          value: 0,
+          state: 'DISPONIVEL',
+          genreList: [],
+          createdBy: {
+            id: '1',
+            name: 'teste',
+            username: 'teste',
+            password: '12345',
+            province: '12345',
+            cpf: '12345',
+            role: 'ADMIN',
+            state: '',
+            favoriteBooks: []
+          },
+          createdAt: new Date(),
+        };
+        const mockedUserEntity: UserEntity = {
+          id: userId,
+          name: 'Usuário Mockado',
+          favoriteBooks: [book],
           username: 'teste',
           password: '12345',
           province: '12345',
           cpf: '12345',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: '',
-          favoriteBooks: []
-        },
-        createdAt: new Date(),
-      };
-      const mockedUserEntity: UserEntity = {
-        id: userId,
-        name: 'Usuário Mockado',
-        favoriteBooks: [book],
-        username: 'teste',
-        password: '12345',
-        province: '12345',
-        cpf: '12345',
-        isAdmin: 'ADMIN',
-        state: '',
-      };
+        };
 
       jest.spyOn(userService, 'bookmarkBook').mockImplementation(async () => mockedUserEntity);
 
@@ -314,73 +313,73 @@ describe('UserController', () => {
         createdBy: new UserEntity
       };
 
-      const mockedUserEntity: UserEntity = {
-        id: userId,
-        name: 'teste4',
-        username: 'teste4',
-        password: '12345',
-        province: 'rio de janeiro',
-        cpf: '17378660743',
-        isAdmin: 'ADMIN',
-        state: 'DISPONIVEL',
-        favoriteBooks: [],
-      };
+          const mockedUserEntity: UserEntity = {
+            id: userId,
+            name: 'teste4',
+            username: 'teste4',
+            password: '12345',
+            province: 'rio de janeiro',
+            cpf: '17378660743',
+            role: 'ADMIN',
+            state: 'DISPONIVEL',
+            favoriteBooks: [],
+          };
 
       jest.spyOn(userService, 'removeBookmarkBook').mockImplementation(async () => mockedUserEntity);
 
       const result = await userController.removeBookmarkBook(userId, book);
 
-      expect(userService.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
-      expect(result).toEqual(mockedUserEntity);
-    });
-  });
-  describe('findAll bookmarked', () => {
-    it('should return all bookmarked books for a user', async () => {
-      const userId = '1';
-      const mockedBookmarkedBooks: BookEntity[] = [
-        {
-          id: '1',
-          name: 'galos',
-          description: 'galos galaticos',
-          author: 'galo cego',
-          value: 0,
-          state: 'DISPONIVEL',
-          genreList: [],
-          createdBy: {
-            id: '1',
-            name: 'teste',
-            username: 'teste',
-            password: '12345',
-            province: '12345',
-            cpf: '12345',
-            isAdmin: 'ADMIN',
-            state: '',
-            favoriteBooks: []
-          },
-          createdAt: new Date(),
-        },
-        {
-          id: '2',
-          name: 'galos 2',
-          description: 'galos galaticos 2 o retorno',
-          author: 'galo cego',
-          value: 0,
-          state: 'DISPONIVEL',
-          genreList: [],
-          createdBy: {
-            id: '1',
-            name: 'teste',
-            username: 'teste',
-            password: '12345',
-            province: '12345',
-            cpf: '12345',
-            isAdmin: 'ADMIN',
-            state: '',
-            favoriteBooks: []
-          },
-          createdAt: new Date(),
-        }
-      ];
+          expect(userController.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
+          expect(result).toEqual(mockedUserEntity);
+        });
+      });
+      describe('findAll bookmarked', () => {
+        it('should return all bookmarked books for a user', async () => {
+          const userId = '1';
+          const mockedBookmarkedBooks: BookEntity[] = [
+            {
+              id: '1',
+              name: 'galos',
+              description: 'galos galaticos',
+              author: 'galo cego',
+              value: 0,
+              state: 'DISPONIVEL',
+              genreList: [],
+              createdBy: {
+                id: '1',
+                name: 'teste',
+                username: 'teste',
+                password: '12345',
+                province: '12345',
+                cpf: '12345',
+                role: 'ADMIN',
+                state: '',
+                favoriteBooks: []
+              },
+              createdAt: new Date(),
+            },
+            {
+              id: '2',
+              name: 'galos 2',
+              description: 'galos galaticos 2 o retorno',
+              author: 'galo cego',
+              value: 0,
+              state: 'DISPONIVEL',
+              genreList: [],
+              createdBy: {
+                id: '1',
+                name: 'teste',
+                username: 'teste',
+                password: '12345',
+                province: '12345',
+                cpf: '12345',
+                role: 'ADMIN',
+                state: '',
+                favoriteBooks: []
+              },
+              createdAt: new Date(),
+            }
+          ];
 
       jest.spyOn(userService, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
 

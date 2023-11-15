@@ -31,7 +31,6 @@ describe('GenreService', () => {
     genreService = module.get<GenreService>(GenreService);
     genreRepository = module.get<Repository<GenreEntity>>(getRepositoryToken(GenreEntity));
   });
-
   it('should be defined', () => {
     expect(genreService).toBeDefined();
     expect(genreController).toBeDefined();

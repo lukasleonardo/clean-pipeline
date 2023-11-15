@@ -1,8 +1,13 @@
-import { Controller, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/guards/roles.decorator';
+import { Role } from '../shared/global.enum';
 
 @Controller('genre')
+@UseGuards(RolesGuard)
+@Roles(Role.admin)
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 

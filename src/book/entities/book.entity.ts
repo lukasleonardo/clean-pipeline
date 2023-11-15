@@ -3,17 +3,14 @@ import {
   Column,
   ManyToMany,
   JoinTable,
-  OneToOne,
   JoinColumn,
   CreateDateColumn,
-  Timestamp,
   PrimaryGeneratedColumn,
   ManyToOne,
 } from 'typeorm';
 import { IBook } from '../interfaces/book.interface';
 import { GenreEntity } from '../../genre/entities/genre.entity';
 import { UserEntity } from '../../user/entities/user.entity';
-
 
 @Entity('book')
 export class BookEntity implements IBook {
@@ -27,10 +24,8 @@ export class BookEntity implements IBook {
   author: string;
   @Column('double precision')
   value: number;
-
   @Column({ type:'varchar', default: 'DISPONIVEL' })
   state: string;
-
   @ManyToMany(type => GenreEntity,{cascade:true, eager: true})
   @JoinTable({
     name: 'book_genres', 
@@ -44,12 +39,9 @@ export class BookEntity implements IBook {
     }
   })
   genreList: GenreEntity[];
-
-  // // administrador que cadastrou o livro
   @ManyToOne(() => UserEntity,)
   @JoinColumn({name:'admin_id'})
   createdBy: UserEntity;
-
   @CreateDateColumn({ type: 'timestamp', default: 'now()'})
   createdAt: Date;
 
