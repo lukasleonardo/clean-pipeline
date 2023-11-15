@@ -34,13 +34,10 @@ describe('UserService', () => {
   describe('test for find all users',()=>{
     it('it should return all users', async()=>{
       const userMock = faker.helpers.multiple(generateMockUserEntity, {count: 4})
-      //userMock
       jest.spyOn(userRepository, 'find').mockResolvedValueOnce(userMock);
-      // Chama a função findAll
       const resultado = await userService.findAll(); 
-      // Verifica se o resultado é igual ao mock de user
+
       expect(resultado).toEqual(userMock);
-      // Verifica se o método find do mock foi chamado uma vez
       expect(userRepository.find).toHaveBeenCalledTimes(1);
     })
   })

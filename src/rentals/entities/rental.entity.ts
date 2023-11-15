@@ -3,7 +3,6 @@ import { UserEntity } from "../../user/entities/user.entity";
 import { BookEntity } from "../../book/entities/book.entity";
 import { IRental } from "../Interfaces/rental.interface";
 
-
 @Entity('rentals')
 export class RentalEntity implements IRental{
 
@@ -26,5 +25,4 @@ export class RentalEntity implements IRental{
   @OneToOne(() => BookEntity, {eager:true})
   @JoinColumn()
   book: BookEntity;
-
 }

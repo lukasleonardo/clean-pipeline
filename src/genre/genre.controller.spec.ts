@@ -37,10 +37,8 @@ describe('GenreController', () => {
         useValue:mockRepository,
       }],
     }).compile();
-
     genreController = module.get<GenreController>(GenreController);
     genreService = module.get<GenreService>(GenreService)
-  
   });
 
   it('should be defined', () => {
@@ -48,29 +46,17 @@ describe('GenreController', () => {
     expect(genreService).toBeDefined();
   });
 
-  describe('create',()=>{
-    
+  describe('create',()=>{  
     it('should return a genre entity successfuly', async()=>{
       const mockDto: CreateGenreDto = {  name: 'Drama'}
-      //act
       const result = await genreController.create(mockDto)
-      //assert
       expect(result).toEqual(newGenreEntity)
       expect(typeof result).toEqual('object')
     })
-
-/////////////////////////////////////
-   it('Deve retornar um erro se o gênero já existe', async () => {
-      
-      
-    });
-  
   })
 
-
   describe('remove', ()=>{
-    it('should remove successfuly a genre entity', async()=>{ 
-      
+    it('should remove successfuly a genre entity', async()=>{     
       const mockDto: CreateGenreDto = {  name: 'Drama'}
       const temp = await genreController.create(mockDto)
       const existingMockId= temp.id
@@ -83,8 +69,6 @@ describe('GenreController', () => {
       expect(JSON.stringify(result)).toBe(expected)
     })
   })
-
-
  });
 
 

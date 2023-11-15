@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { BookService } from './book.service';
 import { BookController } from './book.controller';
 import { BookEntity } from './entities/book.entity';
@@ -10,8 +10,6 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateRequestMiddleware } from '../auth/auth.middleware';
 
-
-
 @Module({
   imports: [TypeOrmModule.forFeature([BookEntity,UserEntity,GenreEntity])],
   controllers: [BookController],
@@ -21,6 +19,6 @@ export class BookModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(UpdateRequestMiddleware)
-      .forRoutes('book','genre','rentals')     
+      .forRoutes('book')     
   }
 }

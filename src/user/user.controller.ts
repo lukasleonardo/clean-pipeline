@@ -17,6 +17,7 @@ import { AuthService } from '../auth/auth.service';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/guards/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { Role } from '../shared/global.enum';
 
 @Controller('user')
 export class UserController {
@@ -36,11 +37,15 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(RolesGuard)
+  @Roles(Role.admin)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':login')
+  @UseGuards(RolesGuard)
+  @Roles(Role.admin)
   findOne(@Param('login') login: string) {
     return this.userService.findOne(login);
   }
@@ -51,33 +56,40 @@ export class UserController {
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.admin)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
 
   @Post('set/admin/:id')
   @UseGuards(RolesGuard)
-  @Roles('ADMIN')
+  @Roles(Role.admin)
   setToAdmin(@Param('id') id: string) {    
     return this.userService.setToAdmin(id);
   }
 
-  @Get('books')
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
+  @Post('set/admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.admin)
+  unSetAdmin(@Param('id') id: string) {
+    return this.userService.unSetAdmin(id)
   }
 
   @Post('bookmark/:id')
+  @UseGuards(JwtAuthGuard)
   bookmarkBook(@Param('id') userid:string, @Body() book:BookEntity) {
     return this.userService.bookmarkBook(userid, book);
   }
 
   @Delete('bookmark/:id')
+  @UseGuards(JwtAuthGuard)
   removeBookmarkBook(@Param('id') userid:string, @Body() book:BookEntity) {
     return this.userService.removeBookmarkBook(userid, book);
   }
 
   @Get('bookmark/:id')
+  @UseGuards(JwtAuthGuard)
   findAllBookmarked(@Param('id') userid: string) {
     return this.userService.findAllBookmarked(userid);
   }

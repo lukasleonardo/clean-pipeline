@@ -5,7 +5,6 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-
   constructor(
     private reflector: Reflector, 
     private userService: UserService,
@@ -15,27 +14,17 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
-      // Se a rota não tem roles definidos, permita o acesso
       return true;
     }
-
     const request = context.switchToHttp().getRequest();
     const data = this.authService.verifyToken(request);
-  
-
     if (data.username) {
       const user = await this.userService.findOne(data.username);
-
       if (!user) {
-        return false; // Se o usuário não for encontrado, negue o acesso
+        return false; 
       }
-
-      // Verifique se algum dos papéis do usuário está incluído nos papéis permitidos
-
-
-      return roles.some((role) => user.isAdmin.includes(role));
+      return roles.some((irole) => user.role.includes(irole));
     }
-
-    return false; // Se não houver nome de usuário nos dados, negue o acesso
+    return false;
   }
 }

@@ -24,7 +24,6 @@ import { AuthService } from '../auth/auth.service';
 export class BookController {
   constructor(private readonly bookService: BookService,
     private readonly authService: AuthService) {}
-
   @Post()
   @UseGuards(RolesGuard) 
   @Roles('ADMIN')
@@ -33,7 +32,6 @@ export class BookController {
     const {username} = decodeTk
     return this.bookService.create(createBookDto, username);
   }
-
   @Get()
   findAll() {
     return this.bookService.findAll();
@@ -83,5 +81,4 @@ export class BookController {
   removeGenreFromBook(@Param('id') bookid:string, @Body() genreid:GenreEntity){
     return this.bookService.removeGenreFromBook(bookid,genreid)
   }
-
 }
