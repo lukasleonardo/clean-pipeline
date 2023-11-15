@@ -3,9 +3,10 @@ import { GenreController } from './genre.controller';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { GenreEntity } from './entities/genre.entity';
-import { HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { mock } from 'jest-mock-extended'
 import { Repository } from 'typeorm';
+import { validate } from 'class-validator';
 
 const repositoryMock = mock<Repository<GenreEntity>>()
 
@@ -15,27 +16,27 @@ export const getConnection = jest.fn().mockReturnValue({
 });
 
 const newGenreEntity = new GenreEntity()
-newGenreEntity.name='Drama' 
+newGenreEntity.name = 'Drama'
 
 const mockRepository = {
-  create:jest.fn().mockResolvedValue(newGenreEntity),
-  remove:jest.fn().mockResolvedValue({
+  create: jest.fn().mockResolvedValue(newGenreEntity),
+  remove: jest.fn().mockResolvedValue({
     message: 'Item removed successfully',
     status: HttpStatus.OK,
   })
 }
 describe('GenreController', () => {
   let genreController: GenreController;
-  let genreService:GenreService;
-  
+  let genreService: GenreService;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GenreController],
       providers: [
         {
-        provide:GenreService,
-        useValue:mockRepository,
-      }],
+          provide: GenreService,
+          useValue: mockRepository,
+        }],
     }).compile();
     genreController = module.get<GenreController>(GenreController);
     genreService = module.get<GenreService>(GenreService)

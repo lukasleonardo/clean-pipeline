@@ -6,8 +6,7 @@ import { UserEntity } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { faker } from '@faker-js/faker';
-import { generateMockUserEntity } from '../../test/mocks/userGenerator.mock';
+import { CreateUserDto } from './dto/create-user.dto';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -35,7 +34,6 @@ describe('UserService', () => {
 
   describe('findAll', () => {
     it('should return a list of users', async () => {
-      // Arrange
       const mockUserList: UserEntity[] = [
         {
           id: "1",
@@ -527,13 +525,13 @@ describe('UserService', () => {
       expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
       expect(result).toEqual([]);
     });
-    
+
     it('should throw a not found exception if user is not found', async () => {
       // Arrange
       const userId = '1';
-    
+
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
-    
+
       // Act and Assert
       await expect(userService.findAllBookmarked(userId)).rejects.toThrowError(
         new HttpException('User not found', HttpStatus.NOT_FOUND),

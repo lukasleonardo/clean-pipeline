@@ -11,7 +11,7 @@ export class GenreService implements IGenreService {
   constructor(
     @InjectRepository(GenreEntity)
     private readonly genreRepository: Repository<GenreEntity>
-  ) {}
+  ) { }
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
     const { name } = createGenreDto;
@@ -25,19 +25,11 @@ export class GenreService implements IGenreService {
     }
     const newGenre = new GenreEntity();
     newGenre.name = name;
-    const errors = await validate(newGenre);
-    if (errors.length > 0) {
-      const errors = { genre: 'Genre input is not valid.' };
-      throw new HttpException(
-        { message: 'Input data validation failed' + errors },
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      const savedGenre = await this.genreRepository.save(newGenre);
-      return savedGenre;
-    }
+    const savedGenre = await this.genreRepository.save(newGenre);
+    return savedGenre;
   }
-  async remove(id: string){
+
+  async remove(id: string) {
     const genre = await this.genreRepository.findOneBy({ id });
     if (genre) {
       await this.genreRepository.delete(genre.id);

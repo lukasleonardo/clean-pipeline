@@ -90,7 +90,7 @@ describe('BookService', () => {
   })
 
   describe('FindByGenre',()=>{
-    function generateMockGenreEntity():GenreEntity{
+    function generateMockGenreEntity(){
       let number = faker.number.int({min:1, max:9}).toString()
       return{
         id: number,
@@ -163,7 +163,8 @@ describe('BookService', () => {
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(mockBook);
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
 
-      const resultado = await bookService.setBookState(mockBook.id); 
+      const resultado = await bookService.setBookState(mockBook.id);
+ 
       expect(resultado.state).toBe(objectState.indisponivel);
       expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
       expect(bookRepository.save).toHaveBeenCalledWith(resultado);
@@ -195,8 +196,7 @@ describe('BookService', () => {
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(mockBook);
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
       const resultado = await bookService.setBookState(mockBook.id);
-
-
+  
       expect(resultado.id).toBe(mockBook.id);
       expect(resultado.state).toBe(objectState.disponivel);
       expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
@@ -540,6 +540,4 @@ describe('BookService', () => {
       );
     });
   });
-
-
 })
