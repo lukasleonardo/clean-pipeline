@@ -58,16 +58,14 @@ export class UserService implements IUserService {
 
 
   async findOne(username: string): Promise<UserEntity> {
-    const listUser = await this.userRepository.findOneBy({username});
-    if (!listUser) {
-      const error = { user: 'user not found' };
+    const user = await this.userRepository.findOneBy({username});
+    if (!user) {
       throw new HttpException(
-        { message: 'Input data validation failed', error },
+        {message: 'User was not found' },
         HttpStatus.NOT_FOUND,
       );
     }
-
-    return listUser;
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
