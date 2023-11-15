@@ -1,7 +1,5 @@
 import { IsPositive, IsString } from "class-validator";
 import { GenreEntity } from "../../genre/entities/genre.entity";
-
-
 export class CreateBookDto {
   @IsString()
   name: string;
@@ -11,6 +9,5 @@ export class CreateBookDto {
   author: string;
   @IsPositive()
   value: number;
-
   genres:GenreEntity[]
 }

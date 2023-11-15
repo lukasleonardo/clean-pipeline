@@ -2,9 +2,7 @@ import {faker } from '@faker-js/faker'
 import { BookEntity } from '../../src/book/entities/book.entity';
 import { generateMockGenreEntity } from './genreGenerator.mock';
 import { objectState } from '../../src/shared/global.enum';
-import { generateMockUserEntity } from './userGenerator.mock';
 
-// Função para gerar um mock de BookEntity
 export function generateMockBookEntity(): BookEntity {
   return {
     id: faker.string.uuid(),
@@ -24,7 +22,7 @@ export function generateMockBookEntity(): BookEntity {
       password: "password",
       province: "province",
       cpf: "99999",
-      isAdmin: "ADMIN",
+      role: "ADMIN",
       state: "INDISPONIVEL",
       favoriteBooks: []
     }, 

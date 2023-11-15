@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { RentalEntity } from './entities/rental.entity';
 import { differenceInDays } from 'date-fns';
 import { objectState } from '../shared/global.enum';
 import { IRentalService } from './Interfaces/rentalService.interface';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 @Injectable()
 export class RentalsService implements IRentalService {
@@ -42,10 +43,12 @@ export class RentalsService implements IRentalService {
     }
   }
 
+
   async retrieveAllFines():Promise<RentalEntity[]> {
     const rentals = await this.rentalRepository.find()
     return rentals;
   }
+
 
   async findAllFromUser(userid: string):Promise<RentalEntity[]> {
     const userRentals = await this.userRepository.findOneBy({id:userid})
@@ -55,7 +58,6 @@ export class RentalsService implements IRentalService {
     }
   }
 
-  
 
   async applyFines() {
    try{
@@ -104,7 +106,6 @@ export class RentalsService implements IRentalService {
         throw new HttpException('Failed to delete the item', HttpStatus.INTERNAL_SERVER_ERROR)
       }
   }
-
 
 
 }

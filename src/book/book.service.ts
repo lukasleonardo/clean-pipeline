@@ -19,15 +19,11 @@ export class BookService implements IBookService {
     private readonly genreRepository: Repository<GenreEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
-  ){
-
-  }
+  ){}
   async create(createBookDto: CreateBookDto, username: string):Promise<BookEntity> {
-
     const {name, description, author, value, genres} = createBookDto
-
-
     const book = await this.bookRepository.findOneBy({ name: name });
+
     if(book){
       const error = { book: 'book already exists in table book' };
       throw new HttpException(
@@ -61,10 +57,6 @@ export class BookService implements IBookService {
   async findAll():Promise<BookEntity[]>{
     const book = await this.bookRepository.find();
     if(!book){
-      // throw new HttpException(
-      //   { message: 'No books have been found' },
-      //   HttpStatus.NOT_FOUND,
-      // );
       return []
     }
     return book;
@@ -110,7 +102,7 @@ export class BookService implements IBookService {
     if(!newBook){
       const error = { book: 'book does not exists' };
       throw new HttpException(
-        { message: 'Input data validation failed', error },
+        { message: 'Book not found', error },
         HttpStatus.NOT_FOUND,
       );
     }
@@ -118,7 +110,6 @@ export class BookService implements IBookService {
     newBook.description=description;
     newBook.author=author;
     newBook.value=value;
-
 
     const errors = await validate(newBook);
     if (errors.length > 0) {
@@ -159,7 +150,6 @@ export class BookService implements IBookService {
         HttpStatus.NOT_FOUND,
       );
     }
-
     if(book.state == objectState.disponivel){
       book.state= objectState.indisponivel
     }else{
@@ -167,7 +157,6 @@ export class BookService implements IBookService {
     }
     const savedBook = await this.bookRepository.save(book)
     return savedBook;
-
   }
 
 async addGenreToBook(bookid:string, genreid:GenreEntity):Promise<BookEntity>{
@@ -184,12 +173,9 @@ async addGenreToBook(bookid:string, genreid:GenreEntity):Promise<BookEntity>{
    }
   }
     
-async removeGenreFromBook(bookid: string, genreid: GenreEntity):Promise<BookEntity> {     
-
+async removeGenreFromBook(bookid: string, genreid: GenreEntity):Promise<BookEntity> {
         const book = await this.bookRepository.findOneBy( {id:bookid} )
-
         if (book) {
-          // Filtra o array para remover o gênero com o ID fornecido
           book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);       
           return await this.bookRepository.save(book)          
         } else {

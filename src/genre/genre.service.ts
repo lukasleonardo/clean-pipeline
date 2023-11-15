@@ -14,9 +14,7 @@ export class GenreService implements IGenreService {
   ) {}
 
   async create(createGenreDto: CreateGenreDto): Promise<GenreEntity> {
-    //desestruturação de objeto
     const { name } = createGenreDto;
-    // Verifica se já existe na tabela
     const genre = await this.genreRepository.findOneBy({ name: name });
     if (genre) {
       const error = { genre: 'genre already exists in table genre' };
@@ -27,7 +25,6 @@ export class GenreService implements IGenreService {
     }
     const newGenre = new GenreEntity();
     newGenre.name = name;
-    //s
     const errors = await validate(newGenre);
     if (errors.length > 0) {
       const errors = { genre: 'Genre input is not valid.' };
@@ -40,7 +37,6 @@ export class GenreService implements IGenreService {
       return savedGenre;
     }
   }
-
   async remove(id: string){
     const genre = await this.genreRepository.findOneBy({ id });
     if (genre) {

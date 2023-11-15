@@ -17,7 +17,6 @@ export class AuthService {
 
   ) {}
 
-
   async login(user: UserEntity): Promise<JsonWebKey> {
     const { username, password } = user;
     const signedUser = await this.userService.findOne(username)
@@ -36,20 +35,14 @@ export class AuthService {
       );
     }
     const expireIn = moment().local().add(3600, 'seconds');
-    const payload = { username: signedUser.username, sub: signedUser.id, role:signedUser.isAdmin  , expireIn };
+    const payload = { username: signedUser.username, sub: signedUser.id, role:signedUser.role  , expireIn };
     return {
       access_token: this.jwtService.sign(payload)
-    };
-   
+    }; 
   }
-
 
   verifyToken(request: Request): any {
     const token = request.headers.authorization?.split(' ')[1];
     return this.jwtService.verify(token, jwtConstants);
-  }
-
-  
+  }  
 }
-
-//bcrypt.compare(password, signedUser.password)

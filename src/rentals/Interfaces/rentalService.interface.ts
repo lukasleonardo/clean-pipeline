@@ -7,5 +7,4 @@ export interface IRentalService {
   findAllFromUser(userid: string):Promise<RentalEntity[]>
   applyFines()
   remove(id: string)
-
 }

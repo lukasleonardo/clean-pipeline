@@ -6,9 +6,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BookEntity } from '../../book/entities/book.entity';
+import { IUser } from '../interfaces/user.interface';
 
 @Entity('user')
-export class UserEntity {
+export class UserEntity implements IUser{
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
@@ -22,13 +23,11 @@ export class UserEntity {
   @Column()
   cpf: string;
 
-
   @Column({ default: 'USER' })
-  isAdmin: string;
+  role: string;
   @Column({ default: 'DISPONIVEL' })
   state: string;
 
-  // Coragem para mudar!
   @ManyToMany(type => BookEntity, {eager:true})
   @JoinTable({
     name: 'bookmarks', 
@@ -42,5 +41,4 @@ export class UserEntity {
     }
   })
   favoriteBooks: BookEntity[];
-
 }

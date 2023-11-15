@@ -60,7 +60,7 @@ describe('UserController', () => {
         province: 'rio de janeiro',
         cpf: '17378660743',
         password: '12345',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -82,7 +82,7 @@ describe('UserController', () => {
         name: 'teste',
         province: 'a',
         cpf: '1234',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -109,7 +109,7 @@ describe('UserController', () => {
         password: '12345',
         province: 'rj',
         cpf: '12345',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: []
       };
@@ -133,7 +133,7 @@ describe('UserController', () => {
           password: '12345',
           province: 'RJ',
           cpf: '12345678901',
-          isAdmin: '',
+          role: '',
           state: '',
           favoriteBooks: [],
         },
@@ -144,7 +144,7 @@ describe('UserController', () => {
           password: '54321',
           province: 'SP',
           cpf: '98765432109',
-          isAdmin: '',
+          role: '',
           state: '',
           favoriteBooks: [],
         },
@@ -170,7 +170,7 @@ describe('UserController', () => {
         password: '12345',
         province: 'RJ',
         cpf: '12345678901',
-        isAdmin: '',
+        role: '',
         state: '',
         favoriteBooks: [],
       };
@@ -218,7 +218,7 @@ describe('UserController', () => {
           password: '12345',
           province: 'RJ',
           cpf: '12345678901',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: '',
           favoriteBooks: [],
         };
@@ -235,7 +235,7 @@ describe('UserController', () => {
         password: '12345',
         province: 'RJ',
         cpf: '12345678901',
-        isAdmin: 'ADMIN',
+        role: 'ADMIN',
         state: '',
         favoriteBooks: [],
       });
@@ -258,7 +258,7 @@ describe('UserController', () => {
             password: '12345',
             province: '12345',
             cpf: '12345',
-            isAdmin: 'ADMIN',
+            role: 'ADMIN',
             state: '',
             favoriteBooks: []
           },
@@ -272,7 +272,7 @@ describe('UserController', () => {
           password: '12345',
           province: '12345',
           cpf: '12345',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: '',
         };
 
@@ -313,7 +313,7 @@ describe('UserController', () => {
             password: '12345',
             province: 'rio de janeiro',
             cpf: '17378660743',
-            isAdmin: 'ADMIN',
+            role: 'ADMIN',
             state: 'DISPONIVEL',
             favoriteBooks: [],
           };
@@ -345,7 +345,7 @@ describe('UserController', () => {
                 password: '12345',
                 province: '12345',
                 cpf: '12345',
-                isAdmin: 'ADMIN',
+                role: 'ADMIN',
                 state: '',
                 favoriteBooks: []
               },
@@ -366,7 +366,7 @@ describe('UserController', () => {
                 password: '12345',
                 province: '12345',
                 cpf: '12345',
-                isAdmin: 'ADMIN',
+                role: 'ADMIN',
                 state: '',
                 favoriteBooks: []
               },

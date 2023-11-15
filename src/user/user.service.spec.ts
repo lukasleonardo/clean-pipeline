@@ -6,6 +6,8 @@ import { UserEntity } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { faker } from '@faker-js/faker';
+import { generateMockUserEntity } from '../../test/mocks/userGenerator.mock';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -42,7 +44,7 @@ describe('UserService', () => {
           password: '12345',
           province: 'rio de janeiro',
           cpf: '17378660743',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: [],
         },
@@ -53,7 +55,7 @@ describe('UserService', () => {
           password: '12345',
           province: 'rio de janeiro',
           cpf: '1737866075543',
-          isAdmin: 'USER',
+          role: 'USER',
           state: 'DISPONIVEL',
           favoriteBooks: [],
         }
@@ -77,7 +79,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -121,7 +123,7 @@ describe('UserService', () => {
         password: '123456',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -171,7 +173,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -198,7 +200,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -238,7 +240,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -248,7 +250,7 @@ describe('UserService', () => {
 
       const result = await userService.setToAdmin(userId);
 
-      expect(result.isAdmin).toBe('ADMIN');
+      expect(result.role).toBe('ADMIN');
     });
 
     it('should throw a not found exception if user is not found', async () => {
@@ -283,7 +285,7 @@ describe('UserService', () => {
           password: '12345',
           province: 'rj',
           cpf: '12324545',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: []
         },
@@ -297,7 +299,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       };
@@ -317,7 +319,7 @@ describe('UserService', () => {
           password: '12345',
           province: 'rj',
           cpf: '12324545',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: []
         },
@@ -357,7 +359,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '12324545',
-        isAdmin: 'ADMIN',
+        role: 'ADMIN',
         state: 'DISPONIVEL',
       };
 
@@ -390,7 +392,7 @@ describe('UserService', () => {
           password: '123345',
           province: 'r',
           cpf: '1313241',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: []
         },
@@ -403,7 +405,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [book],
       }
@@ -415,7 +417,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       }
@@ -438,7 +440,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '123456789',
-        isAdmin: 'USER',
+        role: 'USER',
         state: 'DISPONIVEL',
         favoriteBooks: [],
       }
@@ -457,7 +459,7 @@ describe('UserService', () => {
           password: '12345',
           province: 'rj',
           cpf: '1234355',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: []
         },
@@ -487,7 +489,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '1234355',
-        isAdmin: 'ADMIN',
+        role: 'ADMIN',
         state: 'DISPONIVEL'
       };
 
@@ -512,7 +514,7 @@ describe('UserService', () => {
         password: '12345',
         province: 'rj',
         cpf: '1234355',
-        isAdmin: 'ADMIN',
+        role: 'ADMIN',
         state: 'DISPONIVEL'
       };
 
