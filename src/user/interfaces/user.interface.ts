@@ -13,9 +13,4 @@ export interface IUser {
   favoriteBooks: BookEntity[];
 }
 
-export interface ILoginData {
-  username: string;
-  password: string;
-}
-
 

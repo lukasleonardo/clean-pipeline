@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,7 @@ import { IUserService } from './interfaces/userService.interface';
 import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/guards/roles.decorator';
+
 
 @Injectable()
 export class UserService implements IUserService {
@@ -53,13 +52,14 @@ export class UserService implements IUserService {
     }
   }
 
-  async findAll() {
+  async findAll():Promise<UserEntity[]> {
     const listUsers = await this.userRepository.find()
     return listUsers;
   }
 
-  async findOne(username: string) {
-    const listUser = await this.userRepository.findOneBy({ username });
+
+  async findOne(username: string): Promise<UserEntity> {
+    const listUser = await this.userRepository.findOneBy({username});
     if (!listUser) {
       const error = { user: 'user not found' };
       throw new HttpException(
@@ -67,10 +67,11 @@ export class UserService implements IUserService {
         HttpStatus.NOT_FOUND,
       );
     }
+
     return listUser;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const { name, username, password, province, cpf } = updateUserDto;
 
     const user = await this.userRepository.findOneBy({ id });
@@ -125,10 +126,10 @@ export class UserService implements IUserService {
     return status;
   }
 
-
-  async setToAdmin(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
-
+  
+ 
+  async setToAdmin(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({id});
     if (!user) {
       const error = { user: 'user not found' };
       throw new HttpException(
@@ -136,19 +137,15 @@ export class UserService implements IUserService {
         HttpStatus.NOT_FOUND,
       );
     }
-
     user.isAdmin = Role.admin;
-
     const savedUser = await this.userRepository.save(user);
     return savedUser;
   }
 
 
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
-  }
 
-  async bookmarkBook(userId: string, bookEntity: BookEntity) {
+
+  async bookmarkBook(userId: string, bookEntity: BookEntity): Promise<UserEntity>{
 
     const user = await this.userRepository.findOneBy({ id: userId })
     if (user) {
@@ -165,7 +162,7 @@ export class UserService implements IUserService {
     }
   }
 
-  async removeBookmarkBook(userId: string, book: BookEntity) {
+  async removeBookmarkBook(userId: string, book: BookEntity): Promise<UserEntity> {
     const user = await this.userRepository.findOneBy({ id: userId })
     if (user) {
       user.favoriteBooks = user.favoriteBooks.filter((favoriteBooks) => favoriteBooks.id !== book.id);
@@ -176,8 +173,10 @@ export class UserService implements IUserService {
     }
   }
 
-  async findAllBookmarked(userid: string) {
-    const listUsers = await this.userRepository.findOneBy({ id: userid });
+  
+  async findAllBookmarked(userid: string): Promise<BookEntity[]> {
+    const listUsers = await this.userRepository.findOneBy({id: userid});
+
     if (!listUsers) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
