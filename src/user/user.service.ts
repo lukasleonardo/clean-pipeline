@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,7 @@ import { IUserService } from './interfaces/userService.interface';
 import { Role } from '../shared/global.enum';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/guards/roles.decorator';
+
 
 @Injectable()
 export class UserService implements IUserService {
@@ -53,17 +52,17 @@ export class UserService implements IUserService {
     }
   }
 
-  async findAll() {
+  async findAll():Promise<UserEntity[]> {
     const listUsers = await this.userRepository.find()
     return listUsers;
   }
 
-  async findOne(username: string) {
+  async findOne(username: string): Promise<UserEntity> {
     const listUser = await this.userRepository.findOneBy({username});
     return listUser;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const { name, username, password, province, cpf } = updateUserDto;
 
     const user = await this.userRepository.findOneBy({id});
@@ -119,7 +118,7 @@ export class UserService implements IUserService {
   }
   
  
-  async setToAdmin(id: string) {
+  async setToAdmin(id: string): Promise<UserEntity> {
     const user = await this.userRepository.findOneBy({id});
 
     if (!user){
@@ -137,11 +136,7 @@ export class UserService implements IUserService {
   }
 
 
-  borrowedBooks(borrowedbooks: BookEntity[]) {
-    return 'retorna todos os livros emprestado';
-  }
-
-  async bookmarkBook(userId: string, bookEntity: BookEntity) {
+  async bookmarkBook(userId: string, bookEntity: BookEntity): Promise<UserEntity> {
     console.log(userId)
     console.log(bookEntity)
     try{
@@ -164,7 +159,7 @@ export class UserService implements IUserService {
     }
   }
 
-  async removeBookmarkBook(userId:string, book: BookEntity) {
+  async removeBookmarkBook(userId:string, book: BookEntity): Promise<UserEntity> {
     
     try {
       const user = await this.userRepository.findOneBy( {id:userId} )
@@ -180,7 +175,7 @@ export class UserService implements IUserService {
     }
   }
   
-  async findAllBookmarked(userid: string) {
+  async findAllBookmarked(userid: string): Promise<BookEntity[]> {
     const listUsers = await this.userRepository.findOneBy({id: userid});
     return listUsers.favoriteBooks;
     

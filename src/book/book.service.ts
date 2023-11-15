@@ -81,7 +81,7 @@ export class BookService implements IBookService {
     return book;
   }
 
-  async findByGenre(genreId: string) {
+  async findByGenre(genreId: string):Promise<BookEntity[]> {
     try {
       const books = await this.bookRepository.find({
         where: {
@@ -133,7 +133,7 @@ export class BookService implements IBookService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string){
     const book = await this.bookRepository.findOneBy({ id });
     if (book) {
       await this.bookRepository.delete(book.id);
@@ -151,7 +151,7 @@ export class BookService implements IBookService {
   }
 
 
-  async setBookState(id: string) {
+  async setBookState(id: string):Promise<BookEntity> {
     const book = await this.bookRepository.findOneBy({ id });
     if(!book){
       throw new HttpException(
@@ -170,7 +170,7 @@ export class BookService implements IBookService {
 
   }
 
-async addGenreToBook(bookid:string, genreid:GenreEntity){
+async addGenreToBook(bookid:string, genreid:GenreEntity):Promise<BookEntity>{
     const book = await this.bookRepository.findOneBy( {id:bookid} )    
     if(book){
       const genre = await this.genreRepository.findOneBy({id:genreid.id})
@@ -184,16 +184,14 @@ async addGenreToBook(bookid:string, genreid:GenreEntity){
    }
   }
     
-async removeGenreFromBook(bookid: string, genreid: GenreEntity) {     
+async removeGenreFromBook(bookid: string, genreid: GenreEntity):Promise<BookEntity> {     
 
         const book = await this.bookRepository.findOneBy( {id:bookid} )
 
         if (book) {
           // Filtra o array para remover o gênero com o ID fornecido
-          book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);
-          
-          return await this.bookRepository.save(book) 
-          
+          book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);       
+          return await this.bookRepository.save(book)          
         } else {
           throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
         }
