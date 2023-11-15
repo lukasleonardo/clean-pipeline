@@ -193,8 +193,6 @@ describe('UserController', () => {
 
       expect(userService.findOne).toHaveBeenCalledWith(login);
       expect(result).toEqual(user);
-      console.log(user)
-      console.log(result)
     });
   });
   describe('remove', () => {

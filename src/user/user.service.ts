@@ -40,17 +40,10 @@ export class UserService implements IUserService {
       );
     }
 
-    const errors = await validate(newUser);
-    if (errors.length > 0) {
-      const _errors = { checkUser: 'User is not valid' };
-      throw new HttpException(
-        { message: 'Input data validation failed', _errors },
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      const savedUser = await this.userRepository.save(newUser)
-      return savedUser;
-    }
+    
+    const savedUser = await this.userRepository.save(newUser)
+    return savedUser;
+    
   }
 
   async findAll() {

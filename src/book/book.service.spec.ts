@@ -42,11 +42,11 @@ describe('BookService', () => {
     userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
   });
 
-  xit('should be defined', () => {
+  it('should be defined', () => {
     expect(bookService).toBeDefined();
   });
 
-  xdescribe('FindAll',()=>{
+  describe('FindAll',()=>{
      it('it should return all books', async ()=>{
       const livrosMock = faker.helpers.multiple(generateMockBookEntity, {count: 4})
       //bookMock
@@ -77,7 +77,7 @@ describe('BookService', () => {
   })
 
 
-  xdescribe('FindOne',()=>{
+  describe('FindOne',()=>{
     it('it should return one book', async()=>{
           // Configuração do mock para o repositório
     const livroMock= generateMockBookEntity()
@@ -113,7 +113,7 @@ describe('BookService', () => {
     })
   })
 
-  xdescribe('FindByGenre',()=>{
+  describe('FindByGenre',()=>{
     function generateMockGenreEntity(){
       let number = faker.number.int({min:1, max:9}).toString()
       return{
@@ -169,7 +169,7 @@ describe('BookService', () => {
   })
 
   
-  xdescribe('setBookState', () => {
+  describe('setBookState', () => {
     it('should set book state to indisponivel when it is disponivel', async () => {
       const mockBook = {
         id: faker.string.uuid(),
@@ -196,7 +196,6 @@ describe('BookService', () => {
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
 
       const resultado = await bookService.setBookState(mockBook.id);
-      //console.log(resultado)
 
       expect(resultado.state).toBe(objectState.indisponivel);
       expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
@@ -230,7 +229,6 @@ describe('BookService', () => {
       jest.spyOn(bookRepository, 'save').mockResolvedValueOnce(mockBook);
 
       const resultado = await bookService.setBookState(mockBook.id);
-      console.log(resultado)
       expect(resultado.id).toBe(mockBook.id);
       expect(resultado.state).toBe(objectState.disponivel);
       expect(bookRepository.findOneBy).toHaveBeenCalledWith({id:mockBook.id});
@@ -251,7 +249,7 @@ describe('BookService', () => {
     });
   });
 
-  xdescribe('Remove',()=>{
+  describe('Remove',()=>{
     it('should remove a book successfuly',async()=>{
       const mockBook = generateMockBookEntity()
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(mockBook);
@@ -503,7 +501,7 @@ describe('BookService', () => {
   });
 
 
-  xdescribe('removeGenreFromBook', () => {
+  describe('removeGenreFromBook', () => {
     const bookId = '1';
     const genreId = '2';
     const book = {
