@@ -19,31 +19,31 @@ export class BookService implements IBookService {
     private readonly genreRepository: Repository<GenreEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
-  ){
+  ) {
 
   }
-  async create(createBookDto: CreateBookDto, username: string):Promise<BookEntity> {
+  async create(createBookDto: CreateBookDto, username: string): Promise<BookEntity> {
 
-    const {name, description, author, value, genres} = createBookDto
+    const { name, description, author, value, genres } = createBookDto
 
 
     const book = await this.bookRepository.findOneBy({ name: name });
-    if(book){
+    if (book) {
       const error = { book: 'book already exists in table book' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
       );
     }
-    const admin = await this.userRepository.findOneBy({username: username})
+    const admin = await this.userRepository.findOneBy({ username: username })
     const newBook = new BookEntity();
-    newBook.name=name;
-    newBook.description=description;
-    newBook.author=author;
-    newBook.value=value;
+    newBook.name = name;
+    newBook.description = description;
+    newBook.author = author;
+    newBook.value = value;
     newBook.genreList = genres;
     newBook.createdBy = admin;
-    
+
     const errors = await validate(newBook);
     if (errors.length > 0) {
       const errors = { book: 'book input is not valid.' };
@@ -58,9 +58,9 @@ export class BookService implements IBookService {
 
   }
 
-  async findAll():Promise<BookEntity[]>{
+  async findAll(): Promise<BookEntity[]> {
     const book = await this.bookRepository.find();
-    if(!book){
+    if (!book) {
       // throw new HttpException(
       //   { message: 'No books have been found' },
       //   HttpStatus.NOT_FOUND,
@@ -70,9 +70,9 @@ export class BookService implements IBookService {
     return book;
   }
 
-  async findOne(id: string): Promise<BookEntity>{
+  async findOne(id: string): Promise<BookEntity> {
     const book = await this.bookRepository.findOneBy({ id });
-    if(!book){
+    if (!book) {
       throw new HttpException(
         { message: 'No book found with this id' },
         HttpStatus.NOT_FOUND,
@@ -104,20 +104,20 @@ export class BookService implements IBookService {
     }
   }
 
-  async update(id: string, updateBookDto: UpdateBookDto):Promise<BookEntity> {
-    const {name, description, author, value} = updateBookDto
-    const newBook = await this.bookRepository.findOneBy({id});
-    if(!newBook){
+  async update(id: string, updateBookDto: UpdateBookDto): Promise<BookEntity> {
+    const { name, description, author, value } = updateBookDto
+    const newBook = await this.bookRepository.findOneBy({ id });
+    if (!newBook) {
       const error = { book: 'book does not exists' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.NOT_FOUND,
       );
     }
-    newBook.name=name;
-    newBook.description=description;
-    newBook.author=author;
-    newBook.value=value;
+    newBook.name = name;
+    newBook.description = description;
+    newBook.author = author;
+    newBook.value = value;
 
 
     const errors = await validate(newBook);
@@ -153,16 +153,16 @@ export class BookService implements IBookService {
 
   async setBookState(id: string) {
     const book = await this.bookRepository.findOneBy({ id });
-    if(!book){
+    if (!book) {
       throw new HttpException(
         { message: 'No book found with this id' },
         HttpStatus.NOT_FOUND,
       );
     }
 
-    if(book.state == objectState.disponivel){
-      book.state= objectState.indisponivel
-    }else{
+    if (book.state == objectState.disponivel) {
+      book.state = objectState.indisponivel
+    } else {
       book.state = objectState.disponivel
     }
     const savedBook = await this.bookRepository.save(book)
@@ -170,34 +170,34 @@ export class BookService implements IBookService {
 
   }
 
-async addGenreToBook(bookid:string, genreid:GenreEntity){
-    const book = await this.bookRepository.findOneBy( {id:bookid} )
-    
-    if(book){
-      const genre = await this.genreRepository.findOneBy({id:genreid.id})
-      const genreExists = book.genreList.some((genre) => genre.id === genreid.id );
-      if(!genreExists && genre != null){
+  async addGenreToBook(bookid: string, genreid: GenreEntity) {
+    const book = await this.bookRepository.findOneBy({ id: bookid })
+
+    if (book) {
+      const genre = await this.genreRepository.findOneBy({ id: genreid.id })
+      const genreExists = book.genreList.some((genre) => genre.id === genreid.id);
+      if (!genreExists && genre != null) {
         book.genreList.push(genre)
         return await this.bookRepository.save(book)
       }
-   }else{
+    } else {
       throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
-   }
+    }
   }
-    
-async removeGenreFromBook(bookid: string, genreid: GenreEntity) {     
 
-        const book = await this.bookRepository.findOneBy( {id:bookid} )
+  async removeGenreFromBook(bookid: string, genreid: GenreEntity) {
 
-        if (book) {
-          // Filtra o array para remover o gênero com o ID fornecido
-          book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);
-          
-          return await this.bookRepository.save(book) 
-          
-        } else {
-          throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
-        }
+    const book = await this.bookRepository.findOneBy({ id: bookid })
+
+    if (book) {
+      // Filtra o array para remover o gênero com o ID fornecido
+      book.genreList = book.genreList.filter((genre) => genre.id !== genreid.id);
+
+      return await this.bookRepository.save(book)
+
+    } else {
+      throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+    }
   }
 
 }

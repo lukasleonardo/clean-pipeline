@@ -19,11 +19,24 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [{
         provide: UserService,
-        useValue: {}
+        useValue: {
+          create: jest.fn(),
+          login: jest.fn(),
+          findAll: jest.fn(),
+          findOne: jest.fn(),
+          update: jest.fn(),
+          remove: jest.fn(),
+          setToAdmin: jest.fn(),
+          bookmarkBook: jest.fn(),
+          removeBookmarkBook: jest.fn(),
+          findAllBookmarked: jest.fn(),
+        }
       },
       {
         provide: AuthService,
-        useValue: {}
+        useValue: {
+          login: jest.fn()
+        }
       },
       {
         provide: UserController,
@@ -64,12 +77,11 @@ describe('UserController', () => {
         state: '',
         favoriteBooks: []
       };
-
-      jest.spyOn(userController, 'create').mockImplementation(async () => createdUser);
+      jest.spyOn(userService, 'create').mockImplementation(async () => createdUser);
 
       const result = await userController.create(createUserDto);
 
-      expect(userController.create).toHaveBeenCalledWith(createUserDto);
+      expect(userService.create).toHaveBeenCalledWith(createUserDto);
       expect(result).toEqual(createdUser);
     });
   });
@@ -88,11 +100,11 @@ describe('UserController', () => {
       };
 
       const mockToken: JsonWebKey = { Bearer: "abc" };
-      jest.spyOn(userController, 'login').mockImplementation(async () => mockToken);
+      jest.spyOn(authService, 'login').mockResolvedValueOnce(mockToken);
 
       const result = await userController.login(loginUser);
 
-      expect(userController.login).toHaveBeenCalledWith(loginUser);
+      expect(authService.login).toHaveBeenCalledWith(loginUser);
       expect(result).toEqual(mockToken);
     });
   });
@@ -114,11 +126,11 @@ describe('UserController', () => {
         favoriteBooks: []
       };
 
-      jest.spyOn(userController, 'update').mockImplementation(async () => updatedUser);
+      jest.spyOn(userService, 'update').mockImplementation(async () => updatedUser);
 
       const result = await userController.update(userId, updateUserDto);
 
-      expect(userController.update).toHaveBeenCalledWith(userId, updateUserDto);
+      expect(userService.update).toHaveBeenCalledWith(userId, updateUserDto);
       expect(result.username).toEqual(updateUserDto.username);
     });
   });
@@ -150,11 +162,11 @@ describe('UserController', () => {
         },
       ];
 
-      jest.spyOn(userController, 'findAll').mockImplementation(async () => users);
+      jest.spyOn(userService, 'findAll').mockImplementation(async () => users);
 
       const result = await userController.findAll();
 
-      expect(userController.findAll).toHaveBeenCalled();
+      expect(userService.findAll).toHaveBeenCalled();
       expect(result).toEqual(users);
     });
   });
@@ -175,11 +187,11 @@ describe('UserController', () => {
         favoriteBooks: [],
       };
 
-      jest.spyOn(userController, 'findOne').mockImplementation(async () => user);
+      jest.spyOn(userService, 'findOne').mockImplementation(async () => user);
 
       const result = await userController.findOne(login);
 
-      expect(userController.findOne).toHaveBeenCalledWith(login);
+      expect(userService.findOne).toHaveBeenCalledWith(login);
       expect(result).toEqual(user);
       console.log(user)
       console.log(result)
@@ -189,7 +201,7 @@ describe('UserController', () => {
     it('should remove a user', async () => {
       const userId = '1';
 
-      jest.spyOn(userController, 'remove').mockImplementation(async () => {
+      jest.spyOn(userService, 'remove').mockImplementation(async () => {
         return {
           message: 'Item removed successfully',
           status: HttpStatus.OK,
@@ -198,19 +210,18 @@ describe('UserController', () => {
 
       const result = await userController.remove(userId);
 
-      expect(userController.remove).toHaveBeenCalledWith(userId);
+      expect(userService.remove).toHaveBeenCalledWith(userId);
       expect(result).toEqual({
         message: 'Item removed successfully',
         status: HttpStatus.OK,
       });
     });
   });
-
   describe('setToAdmin', () => {
     it('should set user to admin', async () => {
       const userId = '1';
 
-      jest.spyOn(userController, 'setToAdmin').mockImplementation(async () => {
+      jest.spyOn(userService, 'setToAdmin').mockImplementation(async () => {
         const user: UserEntity = {
           id: userId,
           name: 'teste',
@@ -227,7 +238,7 @@ describe('UserController', () => {
 
       const result = await userController.setToAdmin(userId);
 
-      expect(userController.setToAdmin).toHaveBeenCalledWith(userId);
+      expect(userService.setToAdmin).toHaveBeenCalledWith(userId);
       expect(result).toEqual({
         id: userId,
         name: 'teste',
@@ -240,10 +251,96 @@ describe('UserController', () => {
         favoriteBooks: [],
       });
     });
-    describe('bookMark', () => {
-      it('should bookmark a book for a user', async () => {
-        const userId = '1';
-        const book: BookEntity = {
+  });
+  describe('bookMark', () => {
+    it('should bookmark a book for a user', async () => {
+      const userId = '1';
+      const book: BookEntity = {
+        id: '1',
+        name: 'galos',
+        description: 'galos galaticos',
+        author: 'galo cego',
+        value: 0,
+        state: 'DISPONIVEL',
+        genreList: [],
+        createdBy: {
+          id: '1',
+          name: 'teste',
+          username: 'teste',
+          password: '12345',
+          province: '12345',
+          cpf: '12345',
+          isAdmin: 'ADMIN',
+          state: '',
+          favoriteBooks: []
+        },
+        createdAt: new Date(),
+      };
+      const mockedUserEntity: UserEntity = {
+        id: userId,
+        name: 'Usuário Mockado',
+        favoriteBooks: [book],
+        username: 'teste',
+        password: '12345',
+        province: '12345',
+        cpf: '12345',
+        isAdmin: 'ADMIN',
+        state: '',
+      };
+
+      jest.spyOn(userService, 'bookmarkBook').mockImplementation(async () => mockedUserEntity);
+
+      const result = await userController.bookmarkBook(userId, book);
+
+      expect(userService.bookmarkBook).toHaveBeenCalledWith(userId, book);
+      expect(result).toEqual(mockedUserEntity);
+    });
+  });
+  describe('Remove bookmarked', () => {
+    it('should remove a bookmarked book for a user', async () => {
+      const userId = '1';
+      const book: BookEntity = {
+        id: '1',
+        name: 'galos galaticos',
+        description: 'amoeba roxa',
+        author: 'sol mandado',
+        value: 0,
+        state: 'DISPONIVEL',
+        createdAt: new Date('2023-11-14T03:50:42.847Z'),
+        genreList: [
+          {
+            id: '1',
+            name: 'sexo',
+          },
+        ],
+        createdBy: new UserEntity
+      };
+
+      const mockedUserEntity: UserEntity = {
+        id: userId,
+        name: 'teste4',
+        username: 'teste4',
+        password: '12345',
+        province: 'rio de janeiro',
+        cpf: '17378660743',
+        isAdmin: 'ADMIN',
+        state: 'DISPONIVEL',
+        favoriteBooks: [],
+      };
+
+      jest.spyOn(userService, 'removeBookmarkBook').mockImplementation(async () => mockedUserEntity);
+
+      const result = await userController.removeBookmarkBook(userId, book);
+
+      expect(userService.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
+      expect(result).toEqual(mockedUserEntity);
+    });
+  });
+  describe('findAll bookmarked', () => {
+    it('should return all bookmarked books for a user', async () => {
+      const userId = '1';
+      const mockedBookmarkedBooks: BookEntity[] = [
+        {
           id: '1',
           name: 'galos',
           description: 'galos galaticos',
@@ -263,126 +360,38 @@ describe('UserController', () => {
             favoriteBooks: []
           },
           createdAt: new Date(),
-        };
-        const mockedUserEntity: UserEntity = {
-          id: userId,
-          name: 'Usuário Mockado',
-          favoriteBooks: [book],
-          username: 'teste',
-          password: '12345',
-          province: '12345',
-          cpf: '12345',
-          isAdmin: 'ADMIN',
-          state: '',
-        };
-
-        jest.spyOn(userController, 'bookmarkBook').mockImplementation(async () => mockedUserEntity);
-
-        const result = await userController.bookmarkBook(userId, book);
-
-        expect(userController.bookmarkBook).toHaveBeenCalledWith(userId, book);
-        expect(result).toEqual(mockedUserEntity);
-        console.log(book)
-        console.log(mockedUserEntity)
-        console.log(result)
-      });
-      describe('Remove bookmarked', () => {
-        it('should remove a bookmarked book for a user', async () => {
-          const userId = '1';
-          const book: BookEntity = {
+        },
+        {
+          id: '2',
+          name: 'galos 2',
+          description: 'galos galaticos 2 o retorno',
+          author: 'galo cego',
+          value: 0,
+          state: 'DISPONIVEL',
+          genreList: [],
+          createdBy: {
             id: '1',
-            name: 'galos galaticos',
-            description: 'amoeba roxa',
-            author: 'sol mandado',
-            value: 0,
-            state: 'DISPONIVEL',
-            createdAt: new Date('2023-11-14T03:50:42.847Z'),
-            genreList: [
-              {
-                id: '1',
-                name: 'sexo',
-              },
-            ],
-            createdBy: new UserEntity
-          };
-
-          const mockedUserEntity: UserEntity = {
-            id: userId,
-            name: 'teste4',
-            username: 'teste4',
+            name: 'teste',
+            username: 'teste',
             password: '12345',
-            province: 'rio de janeiro',
-            cpf: '17378660743',
+            province: '12345',
+            cpf: '12345',
             isAdmin: 'ADMIN',
-            state: 'DISPONIVEL',
-            favoriteBooks: [],
-          };
+            state: '',
+            favoriteBooks: []
+          },
+          createdAt: new Date(),
+        }
+      ];
 
-          jest.spyOn(userController, 'removeBookmarkBook').mockImplementation(async () => mockedUserEntity);
+      jest.spyOn(userService, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
 
-          const result = await userController.removeBookmarkBook(userId, book);
+      const result = await userController.findAllBookmarked(userId);
 
-          expect(userController.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
-          expect(result).toEqual(mockedUserEntity);
-        });
-      });
-      describe('findAll bookmarked', () => {
-        it('should return all bookmarked books for a user', async () => {
-          const userId = '1';
-          const mockedBookmarkedBooks: BookEntity[] = [
-            {
-              id: '1',
-              name: 'galos',
-              description: 'galos galaticos',
-              author: 'galo cego',
-              value: 0,
-              state: 'DISPONIVEL',
-              genreList: [],
-              createdBy: {
-                id: '1',
-                name: 'teste',
-                username: 'teste',
-                password: '12345',
-                province: '12345',
-                cpf: '12345',
-                isAdmin: 'ADMIN',
-                state: '',
-                favoriteBooks: []
-              },
-              createdAt: new Date(),
-            },
-            {
-              id: '2',
-              name: 'galos 2',
-              description: 'galos galaticos 2 o retorno',
-              author: 'galo cego',
-              value: 0,
-              state: 'DISPONIVEL',
-              genreList: [],
-              createdBy: {
-                id: '1',
-                name: 'teste',
-                username: 'teste',
-                password: '12345',
-                province: '12345',
-                cpf: '12345',
-                isAdmin: 'ADMIN',
-                state: '',
-                favoriteBooks: []
-              },
-              createdAt: new Date(),
-            }
-          ];
-
-          jest.spyOn(userController, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
-
-          const result = await userController.findAllBookmarked(userId);
-
-          expect(userController.findAllBookmarked).toHaveBeenCalledWith(userId);
-          expect(result).toEqual(mockedBookmarkedBooks);
-        });
-
-      });
+      expect(userService.findAllBookmarked).toHaveBeenCalledWith(userId);
+      expect(result).toEqual(mockedBookmarkedBooks);
     });
+
   });
 });
+

@@ -33,7 +33,6 @@ describe('UserService', () => {
 
   describe('findAll', () => {
     it('should return a list of users', async () => {
-      // Arrange
       const mockUserList: UserEntity[] = [
         {
           id: "1",
