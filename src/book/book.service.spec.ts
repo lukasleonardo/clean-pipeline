@@ -345,7 +345,7 @@ describe('BookService', () => {
 
       await expect(bookService.update(id, updateBookDto)).rejects.toThrow(
         new HttpException(
-          { message: 'Input data validation failed', error: { book: 'book does not exist' } },
+          { message: 'Book not found', error: { book: 'book does not exist' } },
           HttpStatus.NOT_FOUND,
         ),
       );

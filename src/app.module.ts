@@ -7,7 +7,6 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { RentalsModule } from './rentals/rentals.module';
 import { AuthModule } from './auth/auth.module';
-import { UpdateRequestMiddleware } from './auth/auth.middleware';
 
 
 @Module({

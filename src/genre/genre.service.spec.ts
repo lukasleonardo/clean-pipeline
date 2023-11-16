@@ -7,29 +7,51 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ValidationError, validate } from 'class-validator';
 import { CreateGenreDto } from './dto/create-genre.dto';
+import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { AuthService } from '../auth/auth.service';
+import { UserEntity } from '../user/entities/user.entity';
+import { BookEntity } from '../book/entities/book.entity';
 
 jest.mock('class-validator');
 
 describe('GenreService', () => {
+  let jwtService:JwtService
+  let genreController: GenreController;
   let genreService: GenreService;
-  let genreController: GenreController
-  let genreRepository: Repository<GenreEntity>;
-
+  let userService:UserService;
+  let authService:AuthService;
+  let userRepository: Repository<UserEntity>
+  let bookRepository: Repository<BookEntity>
+  let genreRepository: Repository<GenreEntity>
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GenreController],
       providers: [
         GenreService,
         {
-          provide: getRepositoryToken(GenreEntity),
+          provide:getRepositoryToken(UserEntity),  
+          useClass: Repository
+        },{
+          provide:getRepositoryToken(BookEntity),  
           useClass: Repository,
-        },
+        },{
+          provide:getRepositoryToken(GenreEntity),  
+          useClass: Repository,
+        },UserService,JwtService,AuthService
       ],
     }).compile();
 
     genreController = module.get<GenreController>(GenreController);
-    genreService = module.get<GenreService>(GenreService);
+    jwtService = module.get<JwtService>(JwtService)
+    authService = module.get<AuthService>(AuthService)
+    userService = module.get<UserService>(UserService)
+    genreController = module.get<GenreController>(GenreController);
+    genreService = module.get<GenreService>(GenreService)
+    userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    bookRepository = module.get<Repository<BookEntity>>(getRepositoryToken(BookEntity));
     genreRepository = module.get<Repository<GenreEntity>>(getRepositoryToken(GenreEntity));
+
   });
   it('should be defined', () => {
     expect(genreService).toBeDefined();

@@ -80,7 +80,7 @@ describe('BookController', () => {
           password: "password",
           province: "province",
           cpf: "99999",
-          isAdmin: "ADMIN",
+          role: "ADMIN",
           state: "INDISPONIVEL",
           favoriteBooks: []
         },
@@ -135,7 +135,7 @@ describe('BookController', () => {
             password: "password",
             province: "province",
             cpf: "99999",
-            isAdmin: "ADMIN",
+            role: "ADMIN",
             state: "DISPONIVEL",
             favoriteBooks: []
           },
@@ -156,7 +156,7 @@ describe('BookController', () => {
             password: "1234",
             province: "province",
             cpf: "99999",
-            isAdmin: "ADMIN",
+            role: "ADMIN",
             state: "DISPONIVEL",
             favoriteBooks: []
           }
@@ -189,7 +189,7 @@ describe('BookController', () => {
           password: 'password',
           province: 'province',
           cpf: '99999',
-          isAdmin: 'ADMIN',
+          role: 'ADMIN',
           state: 'DISPONIVEL',
           favoriteBooks: [],
         },

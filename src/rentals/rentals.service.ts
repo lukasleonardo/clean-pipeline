@@ -7,7 +7,6 @@ import { RentalEntity } from './entities/rental.entity';
 import { differenceInDays } from 'date-fns';
 import { objectState } from '../shared/global.enum';
 import { IRentalService } from './Interfaces/rentalService.interface';
-import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 
 @Injectable()
 export class RentalsService implements IRentalService {

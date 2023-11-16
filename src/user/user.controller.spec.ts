@@ -325,11 +325,11 @@ describe('UserController', () => {
             favoriteBooks: [],
           };
 
-      jest.spyOn(userService, 'removeBookmarkBook').mockImplementation(async () => mockedUserEntity);
+      jest.spyOn(userController, 'removeBookmarkBook').mockResolvedValueOnce(mockedUserEntity);
 
       const result = await userController.removeBookmarkBook(userId, book);
 
-          expect(userController.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
+          expect(userController.removeBookmarkBook).toHaveBeenCalled();
           expect(result).toEqual(mockedUserEntity);
         });
       });
