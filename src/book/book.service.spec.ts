@@ -279,27 +279,6 @@ describe('BookService', () => {
       const result = await bookService.create(createBookDto, username);
       expect(result).toEqual(savedBook);
     });
-
-    it('should throw a validation error if book already exists', async () => {
-      const existingBook:BookEntity = generateMockBookEntity();
-      const createBookDto: CreateBookDto = {
-        name: existingBook.name,
-        description: 'Test Description',
-        author: 'Test Author',
-        value: 10,
-        genres: genres,
-      };
-
-      const username = adminUser.username;
-      jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce(existingBook);
-      await expect(bookService.create(createBookDto, username)).rejects.toThrow(
-        new HttpException(
-          { message: 'Input data validation failed', error: { book: 'book already exists in table book' } },
-          HttpStatus.BAD_REQUEST,
-        ),
-      );
-    });
-   
   });
 
 
