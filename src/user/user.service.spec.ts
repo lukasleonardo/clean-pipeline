@@ -346,7 +346,7 @@ describe('UserService', () => {
       );
     });
 
-   /* it('should throw a not found exception if the book is already in favorites', async () => {
+    it('should throw a not found exception if the book is already in favorites', async () => {
       const userId = '1';
       const bookId = 'bookId';
 
@@ -369,9 +369,7 @@ describe('UserService', () => {
       await expect(userService.bookmarkBook(userId, { id: bookId } as BookEntity)).rejects.toThrowError(
         new HttpException('Book already in favorites', HttpStatus.NOT_FOUND),
       );
-    });*/
-
-
+    });
   });
 
   describe('remove bookmark', () => {
