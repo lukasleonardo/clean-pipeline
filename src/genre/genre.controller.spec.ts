@@ -6,7 +6,12 @@ import { GenreEntity } from './entities/genre.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { mock } from 'jest-mock-extended'
 import { Repository } from 'typeorm';
-import { validate } from 'class-validator';
+import { UserService } from '../user/user.service';
+import { AuthService } from '../auth/auth.service';
+import { UserEntity } from '../user/entities/user.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { BookEntity } from '../book/entities/book.entity';
+import { JwtService } from '@nestjs/jwt';
 
 const repositoryMock = mock<Repository<GenreEntity>>()
 
@@ -26,8 +31,13 @@ const mockRepository = {
   })
 }
 describe('GenreController', () => {
+  let jwtService:JwtService
   let genreController: GenreController;
   let genreService: GenreService;
+  let userService:UserService;
+  let authService:AuthService;
+  let userRepository: Repository<UserEntity>
+  let bookRepository: Repository<BookEntity>
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,15 +46,26 @@ describe('GenreController', () => {
         {
           provide: GenreService,
           useValue: mockRepository,
-        }],
+        },{
+          provide:getRepositoryToken(UserEntity),  
+          useClass: Repository
+        },{
+          provide:getRepositoryToken(BookEntity),  
+          useClass: Repository,
+        },UserService,AuthService, JwtService],
     }).compile();
+    jwtService = module.get<JwtService>(JwtService)
+    authService = module.get<AuthService>(AuthService)
+    userService = module.get<UserService>(UserService)
     genreController = module.get<GenreController>(GenreController);
     genreService = module.get<GenreService>(GenreService)
+    userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    bookRepository = module.get<Repository<BookEntity>>(getRepositoryToken(BookEntity));
+
   });
 
   it('should be defined', () => {
     expect(genreController).toBeDefined();
-    expect(genreService).toBeDefined();
   });
 
   describe('create',()=>{  

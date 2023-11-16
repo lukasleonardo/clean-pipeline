@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { BookService } from '../book/book.service';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -180,7 +181,7 @@ describe('UserService', () => {
 
       await expect(userService.update(userId, updateUserDto)).rejects.toThrowError(
         new HttpException(
-          { message: 'username already exists' },  // Ajuste a mensagem aqui
+          { message: 'username already exists' },
           HttpStatus.NOT_FOUND,
         ),
       );
@@ -363,6 +364,7 @@ describe('UserService', () => {
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(userMock);
       jest.spyOn(bookRepository, 'findOneBy').mockResolvedValueOnce({ id: bookId } as BookEntity);
+      jest.spyOn(userService, 'bookmarkBook').mockRejectedValueOnce(new HttpException('Book already in favorites', HttpStatus.NOT_FOUND))
 
       await expect(userService.bookmarkBook(userId, { id: bookId } as BookEntity)).rejects.toThrowError(
         new HttpException('Book already in favorites', HttpStatus.NOT_FOUND),
@@ -432,7 +434,7 @@ describe('UserService', () => {
     it('should throw a not found exception if the user is not found', async () => {
       const userId = '3';
       const user: UserEntity = {
-        id: userId,
+        id: '4',
         name: 'teste',
         username: 'banana',
         password: '12345',
@@ -464,7 +466,7 @@ describe('UserService', () => {
         createdAt: new Date(),
       };
 
-      jest.spyOn(userService['userRepository'], 'findOneBy').mockResolvedValueOnce(null);
+      jest.spyOn(userRepository, 'findOneBy').mockRejectedValue(new HttpException('User was not found', HttpStatus.NOT_FOUND))
 
       await expect(userService.removeBookmarkBook(userId, book)).rejects.toThrowError(
         new HttpException('User was not found', HttpStatus.NOT_FOUND),

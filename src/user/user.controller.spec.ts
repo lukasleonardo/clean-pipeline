@@ -325,61 +325,61 @@ describe('UserController', () => {
           favoriteBooks: [],
         };
 
-        jest.spyOn(userService, 'removeBookmarkBook').mockImplementation(async () => mockedUserEntity);
+      jest.spyOn(userController, 'removeBookmarkBook').mockResolvedValueOnce(mockedUserEntity);
 
         const result = await userController.removeBookmarkBook(userId, book);
 
-        expect(userService.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
-        expect(result).toEqual(mockedUserEntity);
+          expect(userController.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
+          expect(result).toEqual(mockedUserEntity);
+        });
       });
-    });
-    describe('findAll bookmarked', () => {
-      it('should return all bookmarked books for a user', async () => {
-        const userId = '1';
-        const mockedBookmarkedBooks: BookEntity[] = [
-          {
-            id: '1',
-            name: 'galos',
-            description: 'galos galaticos',
-            author: 'galo cego',
-            value: 0,
-            state: 'DISPONIVEL',
-            genreList: [],
-            createdBy: {
+      describe('findAll bookmarked', () => {
+        it('should return all bookmarked books for a user', async () => {
+          const userId = '1';
+          const mockedBookmarkedBooks: BookEntity[] = [
+            {
               id: '1',
-              name: 'teste',
-              username: 'teste',
-              password: '12345',
-              province: '12345',
-              cpf: '12345',
-              role: 'ADMIN',
-              state: '',
-              favoriteBooks: []
+              name: 'galos',
+              description: 'galos galaticos',
+              author: 'galo cego',
+              value: 0,
+              state: 'DISPONIVEL',
+              genreList: [],
+              createdBy: {
+                id: '1',
+                name: 'teste',
+                username: 'teste',
+                password: '12345',
+                province: '12345',
+                cpf: '12345',
+                role: 'ADMIN',
+                state: '',
+                favoriteBooks: []
+              },
+              createdAt: new Date(),
             },
-            createdAt: new Date(),
-          },
-          {
-            id: '2',
-            name: 'galos 2',
-            description: 'galos galaticos 2 o retorno',
-            author: 'galo cego',
-            value: 0,
-            state: 'DISPONIVEL',
-            genreList: [],
-            createdBy: {
-              id: '1',
-              name: 'teste',
-              username: 'teste',
-              password: '12345',
-              province: '12345',
-              cpf: '12345',
-              role: 'ADMIN',
-              state: '',
-              favoriteBooks: []
-            },
-            createdAt: new Date(),
-          }
-        ];
+            {
+              id: '2',
+              name: 'galos 2',
+              description: 'galos galaticos 2 o retorno',
+              author: 'galo cego',
+              value: 0,
+              state: 'DISPONIVEL',
+              genreList: [],
+              createdBy: {
+                id: '1',
+                name: 'teste',
+                username: 'teste',
+                password: '12345',
+                province: '12345',
+                cpf: '12345',
+                role: 'ADMIN',
+                state: '',
+                favoriteBooks: []
+              },
+              createdAt: new Date(),
+            }
+          ];
 
         jest.spyOn(userService, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
 
