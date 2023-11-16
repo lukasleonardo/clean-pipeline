@@ -24,14 +24,7 @@ export class BookService implements IBookService {
   }
   async create(createBookDto: CreateBookDto, username: string):Promise<BookEntity> {
     const {name, description, author, value, genres} = createBookDto
-    const book = await this.bookRepository.findOneBy({ name: name });
-    if (book){
-      const error = { book: 'book already exists in table book' };
-      throw new HttpException(
-        { message: 'Input data validation failed', error },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  
     const admin = await this.userRepository.findOneBy({ username: username })
     const newBook = new BookEntity();
     newBook.name = name;
