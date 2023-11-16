@@ -285,51 +285,51 @@ describe('UserController', () => {
           state: '',
         };
 
-      jest.spyOn(userService, 'bookmarkBook').mockImplementation(async () => mockedUserEntity);
+        jest.spyOn(userService, 'bookmarkBook').mockImplementation(async () => mockedUserEntity);
 
-      const result = await userController.bookmarkBook(userId, book);
+        const result = await userController.bookmarkBook(userId, book);
 
-      expect(userService.bookmarkBook).toHaveBeenCalledWith(userId, book);
-      expect(result).toEqual(mockedUserEntity);
+        expect(userService.bookmarkBook).toHaveBeenCalledWith(userId, book);
+        expect(result).toEqual(mockedUserEntity);
+      });
     });
-  });
-  describe('Remove bookmarked', () => {
-    it('should remove a bookmarked book for a user', async () => {
-      const userId = '1';
-      const book: BookEntity = {
-        id: '1',
-        name: 'galos galaticos',
-        description: 'amoeba roxa',
-        author: 'sol mandado',
-        value: 0,
-        state: 'DISPONIVEL',
-        createdAt: new Date('2023-11-14T03:50:42.847Z'),
-        genreList: [
-          {
-            id: '1',
-            name: 'sexo',
-          },
-        ],
-        createdBy: new UserEntity
-      };
+    describe('Remove bookmarked', () => {
+      it('should remove a bookmarked book for a user', async () => {
+        const userId = '1';
+        const book: BookEntity = {
+          id: '1',
+          name: 'galos galaticos',
+          description: 'amoeba roxa',
+          author: 'sol mandado',
+          value: 0,
+          state: 'DISPONIVEL',
+          createdAt: new Date('2023-11-14T03:50:42.847Z'),
+          genreList: [
+            {
+              id: '1',
+              name: 'sexo',
+            },
+          ],
+          createdBy: new UserEntity
+        };
 
-          const mockedUserEntity: UserEntity = {
-            id: userId,
-            name: 'teste4',
-            username: 'teste4',
-            password: '12345',
-            province: 'rio de janeiro',
-            cpf: '17378660743',
-            role: 'ADMIN',
-            state: 'DISPONIVEL',
-            favoriteBooks: [],
-          };
+        const mockedUserEntity: UserEntity = {
+          id: userId,
+          name: 'teste4',
+          username: 'teste4',
+          password: '12345',
+          province: 'rio de janeiro',
+          cpf: '17378660743',
+          role: 'ADMIN',
+          state: 'DISPONIVEL',
+          favoriteBooks: [],
+        };
 
       jest.spyOn(userController, 'removeBookmarkBook').mockResolvedValueOnce(mockedUserEntity);
 
-      const result = await userController.removeBookmarkBook(userId, book);
+        const result = await userController.removeBookmarkBook(userId, book);
 
-          expect(userController.removeBookmarkBook).toHaveBeenCalled();
+          expect(userController.removeBookmarkBook).toHaveBeenCalledWith(userId, book);
           expect(result).toEqual(mockedUserEntity);
         });
       });
@@ -381,14 +381,14 @@ describe('UserController', () => {
             }
           ];
 
-      jest.spyOn(userService, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
+        jest.spyOn(userService, 'findAllBookmarked').mockImplementation(async () => mockedBookmarkedBooks);
 
-      const result = await userController.findAllBookmarked(userId);
+        const result = await userController.findAllBookmarked(userId);
 
-      expect(userService.findAllBookmarked).toHaveBeenCalledWith(userId);
-      expect(result).toEqual(mockedBookmarkedBooks);
+        expect(userService.findAllBookmarked).toHaveBeenCalledWith(userId);
+        expect(result).toEqual(mockedBookmarkedBooks);
+      });
+
     });
-
   });
-});
 });
