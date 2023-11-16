@@ -62,7 +62,7 @@ export class RentalsService implements IRentalService {
    try{
     const rentals = await this.rentalRepository.find()
     const currentDate = new Date();
-
+    
     rentals.forEach( async (rental) => {
      if(rental.expiratedLoanDate && rental.expiratedLoanDate < currentDate){ 
       const user = await this.userRepository.findOneBy({id:rental.user.id}) 

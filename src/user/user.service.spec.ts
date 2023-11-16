@@ -476,7 +476,6 @@ describe('UserService', () => {
 
   describe('FindAllBookmarked', () => {
     it('should return an array of bookmarked books for a user', async () => {
-      // Arrange
       const userId = '1';
       const userMock: UserEntity = {
         id: userId,
@@ -504,7 +503,6 @@ describe('UserService', () => {
     });
 
     it('should return an empty array if user has no bookmarked books', async () => {
-      // Arrange
       const userId = '1';
       const userMock: UserEntity = {
         id: userId,
@@ -520,21 +518,17 @@ describe('UserService', () => {
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(userMock);
 
-      // Act
       const result = await userService.findAllBookmarked(userId);
 
-      // Assert
       expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
       expect(result).toEqual([]);
     });
 
     it('should throw a not found exception if user is not found', async () => {
-      // Arrange
       const userId = '1';
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
 
-      // Act and Assert
       await expect(userService.findAllBookmarked(userId)).rejects.toThrowError(
         new HttpException('User not found', HttpStatus.NOT_FOUND),
       );

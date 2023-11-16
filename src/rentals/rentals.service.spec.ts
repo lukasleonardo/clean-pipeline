@@ -5,9 +5,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { BookEntity } from '../book/entities/book.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { RentalEntity } from './entities/rental.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('RentalsService', () => {
-  let service: RentalsService;
+  let rentalService: RentalsService;
   let bookRepository: Repository<BookEntity>
   let userRepository: Repository<UserEntity>
   let rentalRepository: Repository<RentalEntity>
@@ -24,13 +25,17 @@ describe('RentalsService', () => {
     }],
     }).compile();
 
-    service = module.get<RentalsService>(RentalsService);
+    rentalService = module.get<RentalsService>(RentalsService);
     rentalRepository = module.get<Repository<RentalEntity>>(getRepositoryToken(RentalEntity));
     bookRepository = module.get<Repository<BookEntity>>(getRepositoryToken(BookEntity));
     userRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(rentalService).toBeDefined();
   });
+
+
+
+
 });

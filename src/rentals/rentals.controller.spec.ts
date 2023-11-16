@@ -158,5 +158,8 @@ describe('RentalsController', () => {
       expect(result).toEqual(mockedStatus);
     });
   });
+
+
+
 });
 
