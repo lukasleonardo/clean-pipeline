@@ -5,7 +5,9 @@ import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/guards/roles.decorator';
 import { Role } from '../shared/global.enum';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('rentals')
 @Controller('rentals')
 export class RentalsController {
   constructor(private readonly rentalsService: RentalsService) {}

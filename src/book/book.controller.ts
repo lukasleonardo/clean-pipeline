@@ -18,7 +18,9 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/guards/roles.decorator';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('book')
 @UseGuards(JwtAuthGuard)
 @Controller('book')
 export class BookController {
