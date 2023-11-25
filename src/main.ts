@@ -11,7 +11,7 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-  .setTitle('Documentacao')
+  .setTitle('Documentação')
   .setDescription('')
   .setVersion('1.0')
   .addTag('user')
